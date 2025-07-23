@@ -15,7 +15,8 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
-            "@backend-monorepo/boilerplate": ["libs/boilerplate/src/index.ts"]
+            "@backend-monorepo/boilerplate": ["libs/boilerplate/src/index.ts"],
+            "@backend-monorepo/domain": ["libs/domain/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]
