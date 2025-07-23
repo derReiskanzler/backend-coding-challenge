@@ -2,7 +2,7 @@ FROM docker.io/node:lts-alpine AS base
 
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci --only=production=false && npm cache clean --force
+RUN npm ci && npm cache clean --force
 COPY . .
 
 FROM base AS build
@@ -12,8 +12,8 @@ FROM docker.io/node:lts-alpine AS production
 
 WORKDIR /app
 
-COPY --from=build --chown=nestjs:nodejs /app/dist/apps/be-auth-service ./
-RUN npm ci --only=production && npm cache clean --force
+COPY --from=build /app/dist/apps/be-auth-service ./
+RUN npm ci && npm cache clean --force
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

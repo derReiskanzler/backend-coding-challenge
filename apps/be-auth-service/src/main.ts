@@ -7,10 +7,25 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AuthModule } from './auth.module';
 import { ConfigService } from '@nestjs/config';
+import { Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
   const configService = app.get(ConfigService);
+  
+  app.connectMicroservice({
+    transport: Transport.KAFKA,
+    options: {
+      client: {
+        brokers: [
+          `${configService.get<string>('message_broker.host')}:${configService.get<number>('message_broker.port')}`,
+          ],
+      },
+      consumer: {
+        groupId: 'auth-service-consumer',
+      },
+    },
+  });
 
   app.enableCors({...configService.get('app.cors'), 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
@@ -20,6 +35,8 @@ async function bootstrap() {
   
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
+
+  app.startAllMicroservices();
 
   const host = configService.get<string>('app.host') || '0.0.0.0';
   const port = configService.get<number>('app.port') || 3000;

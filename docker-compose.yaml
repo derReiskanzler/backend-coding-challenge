@@ -13,3 +13,74 @@ services:
       - PORT=3000
       - NODE_ENV=development
     restart: unless-stopped
+    depends_on:
+      - kafka
+      - auth_db
+      - event_store_db
+
+  auth_db:
+    container_name: auth_db_container
+    image: "postgres"
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DATABASE: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - auth_db-data:/var/lib/postgresql/data
+
+  event_store_db:
+    container_name: event_store_db_container
+    image: "postgres"
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DATABASE: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - event_store_db-data:/var/lib/postgresql/data
+
+# Setup from:
+#     - https://medium.com/@erkndmrl/kafka-cluster-with-docker-compose-5864d50f677e
+#     - https://www.baeldung.com/ops/kafka-docker-setup
+#     - Just visualization under the hood https://docs.docker.com/guides/kafka/
+#     - Kafdrop UI https://medium.com/@jeyagan/kafdrop-kafka-web-ui-quick-start-example-42beb5efd7b7
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.9.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 2181:2181
+      
+  kafka:
+    image: confluentinc/cp-kafka:7.9.1
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    depends_on:
+      - kafka
+    ports:
+      - 19000:9000
+    environment:
+      KAFKA_BROKERCONNECT: kafka:9092
+
+volumes:
+  auth_db-data:
+  event_store_db-data:

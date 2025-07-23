@@ -1,4 +1,4 @@
-import { IsDefined, IsBoolean, ValidateNested, IsPort, IsString, Matches } from 'class-validator';
+import { IsDefined, IsBoolean, ValidateNested, IsBooleanString, IsPort, IsString, Matches, IsNumber } from 'class-validator';
 
 class CorsSettings {
     @IsBoolean()
@@ -20,12 +20,57 @@ class AppSettings {
     cors: CorsSettings;
 }
 
+class DatabaseSettings {
+    @IsString()
+    @Matches(/^[a-zA-Z0-9.]+/)
+    host: string;
+
+    @IsPort()
+    port: string;
+
+    @IsString()
+    username: string;
+    
+    @IsString()
+    password: string;
+    
+    @IsString()
+    database: string;
+    
+    @IsBooleanString()
+    logging: string;
+    
+    @IsBoolean()
+    ssl: boolean;
+}
+
+class MessageBrokerSettings {
+    @IsString()
+    @Matches(/^[a-zA-Z0-9.]+/)
+    host: string;
+
+    @IsNumber()
+    port: number;
+}
+
 export class Config {
     @ValidateNested()
     @IsDefined()
     app: AppSettings;
-    
+
     @IsDefined()
     @IsBoolean()
     production: boolean;
+
+    @ValidateNested()
+    @IsDefined()
+    event_store: DatabaseSettings;
+
+    @ValidateNested()
+    @IsDefined()
+    database: DatabaseSettings;
+
+    @ValidateNested()
+    @IsDefined()
+    message_broker: MessageBrokerSettings;
 }

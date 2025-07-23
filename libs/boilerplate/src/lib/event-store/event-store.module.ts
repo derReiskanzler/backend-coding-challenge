@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { EventStreamReadRepository } from './repositories/event-stream-read-repository';
 import { EventStoreEntityManagerProvider } from './providers/event-store-entity-manager.provider';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthAccountsV1Stream } from './event-streams/auth-accounts-v1.event-stream';
 import { MovieRatingMovieRatingsV1Stream } from './event-streams/movie-rating-movie-ratings-v1.event-stream';
 import { EventStoreName } from './event-store.config';
@@ -16,23 +17,27 @@ const REPOSITORIES = [
 
 @Module({
     imports: [
-        TypeOrmModule.forRoot({
+        TypeOrmModule.forRootAsync({
             name: EventStoreName,
-            type: 'postgres',
-            host: '127.0.0.1',
-            port: 5432,
-            username: 'root',
-            password: 'root',
-            database: 'postgres',
-            entities: [
-                AuthAccountsV1Stream,
-                MovieRatingMovieRatingsV1Stream,
-            ],
-            synchronize: true,
-            logging: false,
-            ssl: false,
-            connectTimeoutMS: 30000,
-            poolSize: 10,
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => ({
+                type: 'postgres',
+                host: configService.get<string>('event_store.host'),
+                port: configService.get<number>('event_store.port'),
+                username: configService.get<string>('event_store.username'),
+                password: configService.get<string>('event_store.password'),
+                database: configService.get<string>('event_store.database'),
+                entities: [
+                    AuthAccountsV1Stream,
+                    MovieRatingMovieRatingsV1Stream,
+                ],
+                synchronize: true,
+                logging: configService.get<string>('event_store.logging') === 'true',
+                ssl: configService.get<boolean>('event_store.ssl'),
+                connectTimeoutMS: 30000,
+                poolSize: 10,
+            }),
         }),
     ],
     providers: [

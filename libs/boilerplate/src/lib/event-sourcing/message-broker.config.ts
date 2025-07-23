@@ -7,7 +7,7 @@ export const microserviceKafkaOptions: MicroserviceOptions = {
   transport: Transport.KAFKA,
   options: {
     client: {
-      brokers: [process.env.KAFKA_BROKER || 'localhost:29092'],
+      brokers: [process.env['KAFKA_BROKER'] || 'kafka:9092'],
     },
   },
 };
