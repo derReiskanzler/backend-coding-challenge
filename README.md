@@ -1,70 +1,82 @@
-# Backend Senior Coding Challenge 🍿
+# BackendMonorepo
 
-Welcome to our Movie Rating System Coding Challenge! We appreciate you taking
-the time to participate and submit a coding challenge! 🥳
+<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
-In this challenge, you'll be tasked with designing and implementing a robust
-backend system that handles user interactions and provides movie ratings. We
-don't want to check coding conventions only; **we want to see your approach
-to systems design!**
+✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
 
-**⚠️ As a tech-agnostic engineering team, we ask you to pick the technologies
-you are most comfortable with and those that will showcase your strongest
-performance. 💪**
+[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/nest?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
 
-## ✅ Requirements
+## Finish your remote caching setup
 
-- [ ] The backend should expose RESTful endpoints to handle user input and
-  return movie ratings.
-- [ ] The system should store data in a database. You can use any existing
-  dataset or API to populate the initial database.
-- [ ] Implement user endpoints to create and view user information.
-- [ ] Implement movie endpoints to create and view movie information.
-- [ ] Implement a rating system to rate the entertainment value of a movie.
-- [ ] Implement a basic profile where users can view their rated movies.
-- [ ] Include unit tests to ensure the reliability of your code.
-- [ ] Ensure proper error handling and validation of user inputs.
+[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/QtlGQ5rk2I)
 
-## ✨ Bonus Points
 
-- [ ] Implement authentication and authorization mechanisms for users.
-- [ ] Provide documentation for your API endpoints using tools like Swagger.
-- [ ] Implement logging to record errors and debug information.
-- [ ] Implement caching mechanisms to improve the rating system's performance.
-- [ ] Implement CI/CD quality gates.
+## Run tasks
 
-## 📋 Evaluation Criteria
+To run the dev server for your app, use:
 
-- **Systems Design:** We want to see your ability to design a flexible and
-  extendable system. Apply design patterns and software engineering concepts.
-- **Code quality:** Readability, maintainability, and adherence to best
-  practices.
-- **Functionality:** Does the system meet the requirements? Does it provide
-  movie
-  ratings?
-- **Testing:** Adequate test coverage and thoroughness of testing.
-- **Documentation:** Clear documentation for setup, usage, and API endpoints.
+```sh
+npx nx serve be-auth-service
+```
 
-## 📐 Submission Guidelines
+To create a production bundle:
 
-- Fork this GitHub repository.
-- Commit your code regularly with meaningful commit messages.
-- Include/Update the README.md file explaining how to set up and run your
-  backend, including any dependencies.
-- Submit the link to your repository.
+```sh
+npx nx build be-auth-service
+```
 
-## 🗒️ Notes
+To see all available targets to run for a project, run:
 
-- You are encouraged to use third-party libraries or frameworks to expedite
-  development but be prepared to justify your choices.
-- Feel free to reach out if you have any questions or need clarification on the
-  requirements.
-- Remember to approach the challenge as you would a real-world project, focusing
-  on scalability, performance, and reliability.
+```sh
+npx nx show project be-auth-service
+```
 
-## 🤔 What if I don't finish?
+These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
 
-Part of the exercise is to see what you prioritize first when you have a limited
-amount of time. For any unfinished tasks, please do add `TODO` comments to
-your code with a short explanation. You will be given an opportunity later to go
-into more detail and explain how you would go about finishing those tasks.
+[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+
+## Add new projects
+
+While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
+
+Use the plugin's generator to create new projects.
+
+To generate a new application, use:
+
+```sh
+npx nx g @nx/nest:app demo
+```
+
+To generate a new library, use:
+
+```sh
+npx nx g @nx/node:lib mylib
+```
+
+You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+
+[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+
+
+[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+
+## Install Nx Console
+
+Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+
+[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+
+## Useful links
+
+Learn more:
+
+- [Learn more about this workspace setup](https://nx.dev/nx-api/nest?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
+- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+
+And join the Nx community:
+- [Discord](https://go.nx.dev/community)
+- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
+- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
+- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
