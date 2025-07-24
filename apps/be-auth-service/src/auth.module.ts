@@ -6,6 +6,14 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { CqrsBoilerplateModule, EventSourcingBoilerplateModule, EventStoreModule, MessageBrokerModule, ReadmodelProjections } from '@backend-monorepo/boilerplate';
 import { AuthAccountsV1StateTable } from './infrastructure/schemas/aggregate-state-tables/auth-accounts-v1-state.table';
 import { AuthUsersV1Readmodel } from './infrastructure/schemas/readmodels/auth-users-v1.readmodel';
+import { PopulateAuthUsersProjector } from './infrastructure/inbound/projectors/populate-auth-users.projector';
+import { AuthUsersV1ReadmodelWriteRepository } from './infrastructure/outbound/repository/v1/write/auth-users-readmodel-write.repository';
+import { AccountV1WriteRepository } from './infrastructure/outbound/repository/v1/write/account-write.repository';
+import { SignUpV1Action } from './infrastructure/inbound/api/v1/accounts/sign-up/sign-up.action';
+import { SignUpCommandHandler } from './application/use-cases/sign-up/sign-up.command-handler';
+import { AccountRepositoryInterface as SignUpRepositoryInterface } from './application/use-cases/sign-up/account.repository.interface';
+import { UsersReadmodelReadRepositoryInterface as GetSignUpReadmodelRepositoryInterface } from './application/use-cases/sign-up/users-readmodel-read.repository.interface';
+import { AuthUsersV1ReadmodelReadRepository } from './infrastructure/outbound/repository/v1/read/auth-users-readmodel-read.repository';
 
 @Module({
   imports: [
@@ -51,7 +59,28 @@ import { AuthUsersV1Readmodel } from './infrastructure/schemas/readmodels/auth-u
     EventStoreModule,
     MessageBrokerModule,
   ],
-  controllers: [AppController],
-  providers: [],
+  controllers: [
+    AppController,
+
+    // API - Accounts
+    SignUpV1Action,
+
+    // Projectors
+    PopulateAuthUsersProjector,
+  ],
+  providers: [
+    // Readmodel repositories
+    AuthUsersV1ReadmodelWriteRepository,
+    AuthUsersV1ReadmodelReadRepository,
+    { provide: GetSignUpReadmodelRepositoryInterface, useExisting: AuthUsersV1ReadmodelReadRepository },
+
+    // Write repositories
+    AccountV1WriteRepository,
+    { provide: SignUpRepositoryInterface, useExisting: AccountV1WriteRepository },
+
+    // Command Handlers
+    SignUpCommandHandler,
+
+  ],
 })
 export class AuthModule {}
