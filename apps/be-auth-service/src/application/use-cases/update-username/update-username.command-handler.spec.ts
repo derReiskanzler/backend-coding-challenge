@@ -5,11 +5,14 @@ import { AccountRepositoryInterface } from './account.repository.interface';
 import { AccountReadRepositoryInterface } from './account-read.repository.interface';
 import { Account } from '../../../domain/aggregates/account.aggregate';
 import { AccountNotFoundException } from '../../exceptions/account-not-found.exception';
+import { GetUsersDocumentRepositoryInterface } from './get-users-document.repository.interface';
+import { AccountAlreadyExistsException } from '../../../domain/exceptions/account-already-exists.exception';
 
 describe('UpdateUsernameCommandHandler', () => {
     let handler: UpdateUsernameCommandHandler;
     let mockWriteRepository: jest.Mocked<AccountRepositoryInterface>;
     let mockReadRepository: jest.Mocked<AccountReadRepositoryInterface>;
+    let mockGetUsersDocumentRepository: jest.Mocked<GetUsersDocumentRepositoryInterface>;
 
     beforeEach(() => {
         mockWriteRepository = {
@@ -18,10 +21,14 @@ describe('UpdateUsernameCommandHandler', () => {
         mockReadRepository = {
             getById: jest.fn(),
         };
+        mockGetUsersDocumentRepository = {
+            getByUsername: jest.fn(),
+        };
 
         handler = new UpdateUsernameCommandHandler(
             mockWriteRepository,
             mockReadRepository,
+            mockGetUsersDocumentRepository,
         );
     });
 
@@ -43,6 +50,7 @@ describe('UpdateUsernameCommandHandler', () => {
                     getPendingEvents: jest.fn().mockReturnValue([]),
                 } as any;
                 mockReadRepository.getById.mockResolvedValue(mockAccount);
+                mockGetUsersDocumentRepository.getByUsername.mockResolvedValue(null);
             });
 
             it('should update username successfully', async () => {
@@ -77,6 +85,18 @@ describe('UpdateUsernameCommandHandler', () => {
 
                 expect(mockAccount.updateUsername).toHaveBeenCalledWith(oldUsername);
                 expect(mockWriteRepository.save).toHaveBeenCalledWith(mockAccount, sameUsernameCommand);
+            });
+        });
+
+        describe('when username already exists', () => {
+            beforeEach(() => {
+                mockGetUsersDocumentRepository.getByUsername.mockResolvedValue({} as any);
+            });
+            
+            it('should throw account already exists exception', async () => {
+                await expect(handler.execute(validCommand)).rejects.toThrow(
+                    AccountAlreadyExistsException.withUsername(newUsername.toString())
+                );
             });
         });
 

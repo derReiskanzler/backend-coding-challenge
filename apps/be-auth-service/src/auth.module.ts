@@ -28,6 +28,7 @@ import { AuthenticateV1Action } from './infrastructure/inbound/tcp/v1/authentica
 import { GetAccountV1Action } from './infrastructure/inbound/api/v1/accounts/get-account/get-account.action';
 import { GetAccountQueryHandler } from './application/use-cases/get-account/get-account.query-handler';
 import { GetAccountDocumentRepositoryInterface } from './application/use-cases/get-account/get-account-document.repository.interface';
+import { GetUsersDocumentRepositoryInterface as GetUpdateUsernameReadmodelRepositoryInterface } from './application/use-cases/update-username/get-users-document.repository.interface';
 
 @Module({
   imports: [
@@ -106,6 +107,7 @@ import { GetAccountDocumentRepositoryInterface } from './application/use-cases/g
     AuthUsersV1ReadmodelReadRepository,
     { provide: GetSignUpReadmodelRepositoryInterface, useExisting: AuthUsersV1ReadmodelReadRepository },
     { provide: GetAccountDocumentRepositoryInterface, useExisting: AuthUsersV1ReadmodelReadRepository },
+    { provide: GetUpdateUsernameReadmodelRepositoryInterface, useExisting: AuthUsersV1ReadmodelReadRepository },
 
     // Aggregate repositories
     AccountV1WriteRepository,

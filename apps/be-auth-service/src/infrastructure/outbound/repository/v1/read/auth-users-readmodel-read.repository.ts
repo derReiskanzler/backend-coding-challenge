@@ -7,12 +7,14 @@ import {
 import { GetUsersDocumentRepositoryInterface as GetSignUpReadmodelRepositoryInterface } from '../../../../../application/use-cases/sign-up/get-users-document.repository.interface';
 import { AuthUserDocument } from '../../../../../application/documents/auth-user.document';
 import { GetAccountDocumentRepositoryInterface } from '../../../../../application/use-cases/get-account/get-account-document.repository.interface';
+import { GetUsersDocumentRepositoryInterface as GetUpdateUsernameReadmodelRepositoryInterface } from '../../../../../application/use-cases/update-username/get-users-document.repository.interface';
 
 @Injectable()
 @ReadmodelRepository(ReadmodelEnum.AUTH_USERS_V1_READMODEL, AuthUserDocument)
 export class AuthUsersV1ReadmodelReadRepository extends ReadmodelReadRepository implements
     GetSignUpReadmodelRepositoryInterface,
-    GetAccountDocumentRepositoryInterface
+    GetAccountDocumentRepositoryInterface,
+    GetUpdateUsernameReadmodelRepositoryInterface
 {
     public async getById(id: string): Promise<AuthUserDocument|null> {
         return await this.getDocument<AuthUserDocument>({ id });
