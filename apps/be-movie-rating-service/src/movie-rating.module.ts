@@ -2,8 +2,10 @@ import { Logger, Module } from '@nestjs/common';
 import { AppController } from './app/app.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './configuration';
-import { CqrsBoilerplateModule, EventSourcingBoilerplateModule, EventStoreModule, MessageBrokerModule } from '@backend-monorepo/boilerplate';
+import { CqrsBoilerplateModule, EventSourcingBoilerplateModule, EventStoreModule, MessageBrokerModule, ReadmodelProjections } from '@backend-monorepo/boilerplate';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { MovieRatingMovieRatingsV1StateTable } from './infrastructure/schemas/aggregate-state-tables/movie-rating-movie-ratings-v1-state.table';
+import { MovieRatingUsersV1Readmodel } from './infrastructure/schemas/readmodels/movie-rating-users-v1.readmodel';
 
 @Module({
     imports: [
@@ -25,6 +27,9 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
                     password: configService.get<string>('database.password'),
                     database: configService.get<string>('database.database'),
                     entities: [
+                        MovieRatingMovieRatingsV1StateTable,
+                        MovieRatingUsersV1Readmodel,
+                        ReadmodelProjections,
                     ],
                     synchronize: true,
                     logging: configService.get<string>('database.logging') == 'true',
@@ -37,6 +42,9 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
             },
         }),
         TypeOrmModule.forFeature([
+            MovieRatingMovieRatingsV1StateTable,
+            MovieRatingUsersV1Readmodel,
+            ReadmodelProjections,
         ]),
         CqrsBoilerplateModule,
         EventSourcingBoilerplateModule,
