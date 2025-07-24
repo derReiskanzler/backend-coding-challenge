@@ -1,18 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller';
+import { HealthController } from './health.controller';
 
-describe('AppController', () => {
+describe('HealthController', () => {
     let app: TestingModule;
 
     beforeAll(async () => {
         app = await Test.createTestingModule({
-            controllers: [AppController],
+            controllers: [HealthController],
         }).compile();
     });
 
     describe('getData', () => {
         it('should return "Hello API"', () => {
-            const appController = app.get<AppController>(AppController);
+            const appController = app.get<HealthController>(HealthController);
             expect(appController.getData()).toEqual({ message: 'Hello from Movie Rating API' });
         });
     });

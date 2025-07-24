@@ -1,5 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
-import { AppController } from './app/app.controller';
+import { HealthController } from './infrastructure/inbound/api/v1/health/health.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './configuration';
 import { AUTH_SERVICE, CqrsBoilerplateModule, EventSourcingBoilerplateModule, EventStoreModule, MessageBrokerModule, ReadmodelProjections } from '@backend-monorepo/boilerplate';
@@ -72,7 +72,7 @@ import { PopulateMovieRatingMovieRatingsProjector } from './infrastructure/inbou
         MessageBrokerModule,
     ],
     controllers: [
-        AppController,
+        HealthController,
 
         // API - Movie Ratings
         CreateMovieRatingV1Action,

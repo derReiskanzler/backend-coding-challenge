@@ -1,5 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
-import { AppController } from './app/app.controller';
+import { HealthController } from './infrastructure/inbound/api/v1/health/health.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './configuration';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
@@ -80,7 +80,7 @@ import { AuthenticateV1Action } from './infrastructure/inbound/tcp/v1/authentica
     MessageBrokerModule,
   ],
   controllers: [
-    AppController,
+    HealthController,
 
     // API - Accounts
     SignUpV1Action,
