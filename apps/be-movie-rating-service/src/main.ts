@@ -5,14 +5,48 @@
 
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
+import { MovieRatingModule } from './movie-rating.module';
+import { ConfigService } from '@nestjs/config';
+import { Transport } from '@nestjs/microservices';
+import { HttpExceptionFilter } from '@backend-monorepo/boilerplate';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(MovieRatingModule);
+
+    const configService = app.get(ConfigService);
+  
+    app.connectMicroservice({
+      transport: Transport.KAFKA,
+      options: {
+        client: {
+          brokers: [
+            `${configService.get<string>('message_broker.host')}:${configService.get<number>('message_broker.port')}`,
+            ],
+        },
+        consumer: {
+          groupId: 'movie-rating-service-consumer',
+        },
+      },
+    });
+  
+    app.enableCors({...configService.get('app.cors'), 
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      preflightContinue: false,
+      optionsSuccessStatus: 204,
+    });
+
     const globalPrefix = 'api';
     app.setGlobalPrefix(globalPrefix);
-    const port = process.env.PORT || 3000;
-    await app.listen(port);
+
+    app.use(cookieParser());
+    app.useGlobalFilters(new HttpExceptionFilter(configService));
+  
+    app.startAllMicroservices();
+
+    const host = configService.get<string>('app.host') || '0.0.0.0';
+    const port = configService.get<number>('app.port') || 3001;
+    await app.listen(port, host);
     Logger.log(
         `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
     );
