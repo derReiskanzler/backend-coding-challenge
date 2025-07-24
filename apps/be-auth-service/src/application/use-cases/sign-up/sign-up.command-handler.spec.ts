@@ -74,7 +74,7 @@ describe('SignUpCommandHandler', () => {
                 );
             });
 
-            it('should save account with null existing username', async () => {
+            it('should save account aggregate with sign up event', async () => {
                 mockReadRepository.getByUsername.mockResolvedValue(null);
                 let capturedAccount: Account;
                 mockWriteRepository.save.mockImplementation(async (account, command) => {

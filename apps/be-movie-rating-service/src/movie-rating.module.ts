@@ -6,6 +6,10 @@ import { CqrsBoilerplateModule, EventSourcingBoilerplateModule, EventStoreModule
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { MovieRatingMovieRatingsV1StateTable } from './infrastructure/schemas/aggregate-state-tables/movie-rating-movie-ratings-v1-state.table';
 import { MovieRatingUsersV1Readmodel } from './infrastructure/schemas/readmodels/movie-rating-users-v1.readmodel';
+import { CreateMovieRatingV1Action } from './infrastructure/inbound/api/v1/movie-ratings/create-movie-rating/create-movie-rating.action';
+import { MovieRatingV1WriteRepository } from './infrastructure/outbound/repository/v1/write/movie-rating-write.repository';
+import { CreateMovieRatingCommandHandler } from './application/use-cases/create-movie-rating/create-movie-rating.command-handler';
+import { MovieRatingRepositoryInterface as CreateMovieRatingRepositoryInterface } from './application/use-cases/create-movie-rating/movie-rating.repository.interface';
 
 @Module({
     imports: [
@@ -53,9 +57,17 @@ import { MovieRatingUsersV1Readmodel } from './infrastructure/schemas/readmodels
     ],
     controllers: [
         AppController,
+
+        // API - Movie Ratings
+        CreateMovieRatingV1Action,
     ],
     providers: [
+        // Aggregate Repositories
+        MovieRatingV1WriteRepository,
+        { provide: CreateMovieRatingRepositoryInterface, useClass: MovieRatingV1WriteRepository },
 
+        // Command Handlers
+        CreateMovieRatingCommandHandler,
     ],
 })
 export class MovieRatingModule {}

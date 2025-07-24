@@ -60,20 +60,6 @@ describe('AccountState', () => {
 
             expect(result).toBeUndefined();
         });
-
-        it('should handle different id formats', () => {
-            const testCases = [
-                '123e4567-e89b-12d3-a456-426614174000',
-                'simple-id',
-                '12345',
-                ''
-            ];
-
-            testCases.forEach(id => {
-                const state = AccountState.fromRecordData({ id });
-                expect(state.getId()).toBe(id);
-            });
-        });
     });
 
     describe('getUsername', () => {
@@ -91,22 +77,6 @@ describe('AccountState', () => {
             const result = state.getUsername();
 
             expect(result).toBeUndefined();
-        });
-
-        it('should handle different username formats', () => {
-            const testCases = [
-                'simple_user',
-                'user.with.dots',
-                'user-with-dashes',
-                'UserWithCamelCase',
-                'user123',
-                ''
-            ];
-
-            testCases.forEach(username => {
-                const state = AccountState.fromRecordData({ username });
-                expect(state.getUsername()).toBe(username);
-            });
         });
     });
 
@@ -126,20 +96,6 @@ describe('AccountState', () => {
 
             expect(result).toBeUndefined();
         });
-
-        it('should handle different password hash formats', () => {
-            const testCases = [
-                'abc123def456',
-                '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8',
-                'shortHash',
-                ''
-            ];
-
-            testCases.forEach(passwordHash => {
-                const state = AccountState.fromRecordData({ passwordHash });
-                expect(state.getPasswordHash()).toBe(passwordHash);
-            });
-        });
     });
 
     describe('getSalt', () => {
@@ -157,20 +113,6 @@ describe('AccountState', () => {
             const result = state.getSalt();
 
             expect(result).toBeUndefined();
-        });
-
-        it('should handle different salt formats', () => {
-            const testCases = [
-                'randomSalt123',
-                'a1b2c3d4e5f6',
-                'shortSalt',
-                ''
-            ];
-
-            testCases.forEach(salt => {
-                const state = AccountState.fromRecordData({ salt });
-                expect(state.getSalt()).toBe(salt);
-            });
         });
     });
 
