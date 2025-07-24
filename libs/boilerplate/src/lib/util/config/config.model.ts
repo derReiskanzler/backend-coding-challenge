@@ -1,4 +1,4 @@
-import { IsDefined, IsBoolean, ValidateNested, IsBooleanString, IsPort, IsString, Matches, IsNumber } from 'class-validator';
+import { IsDefined, IsBoolean, ValidateNested, IsBooleanString, IsPort, IsString, Matches, IsNumber, IsOptional } from 'class-validator';
 
 class CorsSettings {
     @IsBoolean()
@@ -53,6 +53,14 @@ class MessageBrokerSettings {
     port: number;
 }
 
+class JwtSettings {
+    @IsString()
+    secret: string;
+
+    @IsString()
+    expiration: string;
+}
+
 export class Config {
     @ValidateNested()
     @IsDefined()
@@ -73,4 +81,8 @@ export class Config {
     @ValidateNested()
     @IsDefined()
     message_broker: MessageBrokerSettings;
+
+    @ValidateNested()
+    @IsOptional()
+    jwt: JwtSettings;
 }

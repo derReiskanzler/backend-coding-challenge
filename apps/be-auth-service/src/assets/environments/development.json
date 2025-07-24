@@ -29,5 +29,9 @@
     "message_broker": {
         "host": "kafka",
         "port": 9092
+    },
+    "jwt": {
+        "secret": "secret",
+        "expiration": 28800
     }
 }

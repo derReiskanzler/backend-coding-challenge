@@ -1,3 +1,6 @@
+/** Auth */
+export * from './lib/auth/index';
+
 /** Config */
 export * from './lib/config/index';
 

@@ -17,8 +17,13 @@ import { AuthUsersV1ReadmodelReadRepository } from './infrastructure/outbound/re
 import { AccountV1ReadRepository } from './infrastructure/outbound/repository/v1/read/account-read.repository';
 import { AccountReadRepositoryInterface as GetUpdateUsernameRepositoryInterface } from './application/use-cases/update-username/account-read.repository.interface';
 import { UpdateUsernameCommandHandler } from './application/use-cases/update-username/update-username.command-handler';
+import { LocalStrategy } from './infrastructure/util/strategies/local.strategy';
+import { LoginV1Action } from './infrastructure/inbound/api/v1/auth/login.action';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './infrastructure/util/strategies/jwt.strategy';
 import { UpdateUsernameV1Action } from './infrastructure/inbound/api/v1/accounts/update-username/update-username.action';
 import { AccountRepositoryInterface as UpdateUsernameRepositoryInterface } from './application/use-cases/update-username/account.repository.interface';
+import { ValidateV1Action } from './infrastructure/inbound/api/v1/auth/validate.action';
 
 @Module({
   imports: [
@@ -59,6 +64,15 @@ import { AccountRepositoryInterface as UpdateUsernameRepositoryInterface } from 
         AuthUsersV1Readmodel,
         ReadmodelProjections,
     ]),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('jwt.secret'),
+        signOptions: {
+          expiresIn: `${configService.get<string>('jwt.expiration')}s`,
+        },
+      }),
+    }),
     CqrsBoilerplateModule,
     EventSourcingBoilerplateModule,
     EventStoreModule,
@@ -70,6 +84,10 @@ import { AccountRepositoryInterface as UpdateUsernameRepositoryInterface } from 
     // API - Accounts
     SignUpV1Action,
     UpdateUsernameV1Action,
+
+    // API - Auth
+    LoginV1Action,
+    ValidateV1Action,
 
     // Projectors
     PopulateAuthUsersProjector,
@@ -91,6 +109,10 @@ import { AccountRepositoryInterface as UpdateUsernameRepositoryInterface } from 
     // Command Handlers
     SignUpCommandHandler,
     UpdateUsernameCommandHandler,
+
+    // Strategies
+    JwtStrategy,
+    LocalStrategy,
   ],
 })
 export class AuthModule {}
