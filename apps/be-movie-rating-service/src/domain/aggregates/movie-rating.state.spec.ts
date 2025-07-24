@@ -6,7 +6,8 @@ describe('MovieRatingState', () => {
         title: 'testtitle',
         description: 'testdescription',
         stars: 1,
-        accountId: '123e4567-e89b-12d3-a456-426614174000'
+        accountId: '123e4567-e89b-12d3-a456-426614174000',
+        createdAt: new Date(),
     };
 
     describe('constructor and initialization', () => {
@@ -19,6 +20,7 @@ describe('MovieRatingState', () => {
             expect(state.getDescription()).toBe(validRecordData.description);
             expect(state.getStars()).toBe(validRecordData.stars);
             expect(state.getAccountId()).toBe(validRecordData.accountId);
+            expect(state.getCreatedAt()).toBe(validRecordData.createdAt);
         });
 
         it('should handle empty record data gracefully', () => {
@@ -30,6 +32,7 @@ describe('MovieRatingState', () => {
             expect(state.getDescription()).toBeUndefined();
             expect(state.getStars()).toBeUndefined();
             expect(state.getAccountId()).toBeUndefined();
+            expect(state.getCreatedAt()).toBeUndefined();
         });
 
         it('should handle partial record data', () => {
@@ -45,6 +48,7 @@ describe('MovieRatingState', () => {
             expect(state.getDescription()).toBeUndefined();
             expect(state.getStars()).toBeUndefined();
             expect(state.getAccountId()).toBeUndefined();
+            expect(state.getCreatedAt()).toBeUndefined();
         });
     });
 
@@ -61,6 +65,14 @@ describe('MovieRatingState', () => {
             const state = MovieRatingState.fromRecordData({ title: 'test' });
 
             const result = state.getId();
+
+            expect(result).toBeUndefined();
+        });
+
+        it('should return undefined when createdAt is not set', () => {
+            const state = MovieRatingState.fromRecordData({ id: 'test-id' });
+
+            const result = state.getCreatedAt();
 
             expect(result).toBeUndefined();
         });
@@ -138,6 +150,24 @@ describe('MovieRatingState', () => {
         });
     });
 
+    describe('getCreatedAt', () => {
+        it('should return the createdAt value', () => {
+            const state = MovieRatingState.fromRecordData(validRecordData);
+
+            const result = state.getCreatedAt();
+
+            expect(result).toBe(validRecordData.createdAt);
+        });
+
+        it('should return undefined when createdAt is not set', () => {
+            const state = MovieRatingState.fromRecordData({ id: 'test-id' });
+
+            const result = state.getCreatedAt();
+
+            expect(result).toBeUndefined();
+        });
+    });
+
     describe('static constants', () => {
         it('should use static constants consistently', () => {
             const recordData = {
@@ -145,7 +175,8 @@ describe('MovieRatingState', () => {
                 [MovieRatingState.TITLE]: 'testtitle',
                 [MovieRatingState.DESCRIPTION]: 'testdescription',
                 [MovieRatingState.STARS]: 1,
-                [MovieRatingState.ACCOUNT_ID]: '123e4567-e89b-12d3-a456-426614174001'
+                [MovieRatingState.ACCOUNT_ID]: '123e4567-e89b-12d3-a456-426614174001',
+                [MovieRatingState.CREATED_AT]: new Date(),
             };
 
             const state = MovieRatingState.fromRecordData(recordData);
@@ -155,6 +186,7 @@ describe('MovieRatingState', () => {
             expect(state.getDescription()).toBe('testdescription');
             expect(state.getStars()).toBe(1);
             expect(state.getAccountId()).toBe('123e4567-e89b-12d3-a456-426614174001');
+            expect(state.getCreatedAt()).toBe(new Date());
         });
     });
 
@@ -195,7 +227,8 @@ describe('MovieRatingState', () => {
                 title: validRecordData.title,
                 description: validRecordData.description,
                 stars: validRecordData.stars,
-                accountId: validRecordData.accountId
+                accountId: validRecordData.accountId,
+                createdAt: validRecordData.createdAt,
             });
         });
 
@@ -213,6 +246,7 @@ describe('MovieRatingState', () => {
             expect(recordData.description).toBeUndefined();
             expect(recordData.stars).toBeUndefined();
             expect(recordData.accountId).toBeUndefined();
+            expect(recordData.createdAt).toBeUndefined();
         });
     });
 
@@ -226,6 +260,7 @@ describe('MovieRatingState', () => {
             expect(state1.getDescription()).toBe(state2.getDescription());
             expect(state1.getStars()).toBe(state2.getStars());
             expect(state1.getAccountId()).toBe(state2.getAccountId());
+            expect(state1.getCreatedAt()).toBe(state2.getCreatedAt());
         });
 
         it('should be different instances even with same data', () => {
@@ -248,6 +283,7 @@ describe('MovieRatingState', () => {
             expect(state1.getDescription()).toBe(state2.getDescription());
             expect(state1.getStars()).toBe(state2.getStars());
             expect(state1.getAccountId()).toBe(state2.getAccountId());
+            expect(state1.getCreatedAt()).toBe(state2.getCreatedAt());
         });
     });
 });

@@ -48,6 +48,7 @@ export class MovieRating extends AggregateRoot {
             [MovieRatingState.DESCRIPTION]: event.getDescription(),
             [MovieRatingState.STARS]: event.getStars(),
             [MovieRatingState.ACCOUNT_ID]: event.getAccountId(),
+            [MovieRatingState.CREATED_AT]: event.getCreatedAt(),
         });
     }
 }

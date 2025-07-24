@@ -6,12 +6,14 @@ export class MovieRatingState extends AggregateState {
     public static DESCRIPTION = 'description';
     public static STARS = 'stars';
     public static ACCOUNT_ID = 'accountId';
+    public static CREATED_AT = 'createdAt';
 
     private readonly id: string;
     private readonly title: string;
     private readonly description: string;
     private readonly stars: number;
     private readonly accountId: string;
+    private readonly createdAt: Date;
 
     public getId(): string {
         return this.id;
@@ -33,8 +35,11 @@ export class MovieRatingState extends AggregateState {
         return this.accountId;
     }
 
+    public getCreatedAt(): Date {
+        return this.createdAt;
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     protected initialize(): void {
-        
     }
 }
