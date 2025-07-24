@@ -36,7 +36,7 @@ describe('UpdateUsernameV1Action', () => {
         it('should update username successfully', async () => {
             mockCommandBus.dispatch.mockResolvedValue(undefined);
 
-            await action.index(validAccountId, validUsername);
+            await action.index(validAccountId, {username: validUsername});
 
             expect(mockCommandBus.dispatch).toHaveBeenCalledWith(
                 expect.any(UpdateUsernameCommand)
@@ -47,7 +47,7 @@ describe('UpdateUsernameV1Action', () => {
         it('should create UpdateUsernameCommand with correct parameters', async () => {
             mockCommandBus.dispatch.mockResolvedValue(undefined);
 
-            await action.index(validAccountId, validUsername);
+            await action.index(validAccountId, {username: validUsername});
 
             const dispatchedCommand = mockCommandBus.dispatch.mock.calls[0][0] as UpdateUsernameCommand;
             expect(dispatchedCommand).toBeInstanceOf(UpdateUsernameCommand);
@@ -61,7 +61,7 @@ describe('UpdateUsernameV1Action', () => {
             const errorMsg = 'Username already exists';
             mockCommandBus.dispatch.mockRejectedValue(new Error(errorMsg));
 
-            await expect(action.index(validAccountId, validUsername)).rejects.toThrow(
+            await expect(action.index(validAccountId, {username: validUsername})).rejects.toThrow(
                 errorMsg
             );
 
@@ -72,7 +72,7 @@ describe('UpdateUsernameV1Action', () => {
             const errorMsg = 'Account not found';
             mockCommandBus.dispatch.mockRejectedValue(new Error(errorMsg));
 
-            await expect(action.index(validAccountId, validUsername)).rejects.toThrow(
+            await expect(action.index(validAccountId, {username: validUsername})).rejects.toThrow(
                 errorMsg
             );
 
@@ -82,7 +82,7 @@ describe('UpdateUsernameV1Action', () => {
         it('should return void when command succeeds', async () => {
             mockCommandBus.dispatch.mockResolvedValue(undefined);
 
-            const result = await action.index(validAccountId, validUsername);
+            const result = await action.index(validAccountId, {username: validUsername});
 
             expect(result).toBeUndefined();
         });
@@ -97,7 +97,7 @@ describe('UpdateUsernameV1Action', () => {
             for (let i = 0; i < requests.length; i++) {
                 mockCommandBus.dispatch.mockResolvedValue(undefined);
 
-                await action.index(requests[i].id, requests[i].username);
+                await action.index(requests[i].id, {username: requests[i].username});
 
                 expect(mockCommandBus.dispatch).toHaveBeenCalledWith(expect.any(UpdateUsernameCommand));
             }
@@ -115,7 +115,7 @@ describe('UpdateUsernameV1Action', () => {
             for (let i = 0; i < requests.length; i++) {
                 mockCommandBus.dispatch.mockResolvedValue(undefined);
 
-                await action.index(requests[i].id, requests[i].username);
+                await action.index(requests[i].id, {username: requests[i].username});
 
                 expect(mockCommandBus.dispatch).toHaveBeenCalledWith(expect.any(UpdateUsernameCommand));
             }

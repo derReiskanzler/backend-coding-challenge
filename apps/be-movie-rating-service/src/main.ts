@@ -10,11 +10,38 @@ import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
 import { HttpExceptionFilter } from '@backend-monorepo/boilerplate';
 import cookieParser from 'cookie-parser';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
     const app = await NestFactory.create(MovieRatingModule);
 
     const configService = app.get(ConfigService);
+    
+    const config = new DocumentBuilder()
+      .setTitle('Movie Rating Service API')
+      .setDescription('API documentation for the Movie Rating Service - Create, manage, and discover movie ratings')
+      .setVersion('1.0')
+      .addTag('health', 'Service health and monitoring endpoints')
+      .addTag('movie-ratings', 'Movie rating management endpoints')
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          name: 'JWT',
+          description: 'Enter JWT token',
+          in: 'header',
+        },
+        'JWT-auth',
+      )
+      .build();
+
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/docs', app, document, {
+      swaggerOptions: {
+        persistAuthorization: true,
+      },
+    });
   
     app.connectMicroservice({
       transport: Transport.KAFKA,
@@ -49,6 +76,9 @@ async function bootstrap() {
     await app.listen(port, host);
     Logger.log(
         `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
+    );
+    Logger.log(
+      `📚 Swagger documentation available at: http://localhost:${port}/${globalPrefix}/docs`
     );
 }
 

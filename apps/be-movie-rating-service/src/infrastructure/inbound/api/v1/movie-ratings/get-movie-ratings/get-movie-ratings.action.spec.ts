@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { GetMovieRatingsV1Action } from './get-movie-ratings.action';
 import { AUTH_SERVICE, AuthenticatedUser, QueryBusService, SortDirectionEnum } from '@backend-monorepo/boilerplate';
 import { AccountId, Title } from '@backend-monorepo/domain';
-import { GetMovieRatingsDto } from '../../../dtos/get-movie-ratings.dto';
+import { GetMovieRatingsDto } from '../../../dtos/request/get-movie-ratings.dto';
 import { GetMovieRatingsQuery } from '../../../../../../application/use-cases/get-movie-ratings/get-movie-ratings.query';
 import { MovieRatingDocument } from '../../../../../../application/documents/movie-rating.document';
 import { of } from 'rxjs';

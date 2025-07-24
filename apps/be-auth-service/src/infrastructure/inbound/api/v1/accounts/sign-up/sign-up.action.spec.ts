@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
 import { SignUpV1Action } from './sign-up.action';
 import { CommandBusService } from '@backend-monorepo/boilerplate';
-import { SignUpDto } from '../../../dtos/sign-up.dto';
+import { SignUpDto } from '../../../dtos/request/sign-up.dto';
 import { SignUpCommand } from '../../../../../../application/use-cases/sign-up/sign-up.command';
 import { Username, Password } from '@backend-monorepo/domain';
 

@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { CreateMovieRatingV1Action } from './create-movie-rating.action';
 import { AuthenticatedUser, CommandBusService, AUTH_SERVICE } from '@backend-monorepo/boilerplate';
 import { Title, Description, MovieRatingStars, AccountId } from '@backend-monorepo/domain';
-import { CreateMovieRatingDto } from '../../../dtos/create-movie-rating.dto';
+import { CreateMovieRatingDto } from '../../../dtos/request/create-movie-rating.dto';
 import { CreateMovieRatingCommand } from '../../../../../../application/use-cases/create-movie-rating/create-movie-rating.command';
 import { of } from 'rxjs';
 
