@@ -4,7 +4,7 @@ import { PopulateMovieRatingMovieRatingsProjector } from './populate-movie-ratin
 import { MovieRatingV1ReadmodelWriteRepository } from '../../../outbound/repository/v1/write/movie-rating-readmodel-write.repository';
 import { MovieRatingDocument } from '../../../../application/documents/movie-rating.document';
 import { BaseStreamEvent, Metadata } from '@backend-monorepo/boilerplate';
-import { MovieRatingCreatedEvent, MovieRatingTitleUpdatedEvent } from '@backend-monorepo/domain';
+import { MovieRatingCreatedEvent, MovieRatingDeletedEvent, MovieRatingDescriptionUpdatedEvent, MovieRatingStarsUpdatedEvent, MovieRatingTitleUpdatedEvent } from '@backend-monorepo/domain';
 import { MovieRatingV1ReadmodelReadRepository } from '../../../outbound/repository/v1/read/movie-rating-readmodel-read.repository';
 
 describe('PopulateMovieRatingMovieRatingsProjector', () => {
@@ -16,6 +16,7 @@ describe('PopulateMovieRatingMovieRatingsProjector', () => {
     beforeEach(async () => {
         const mockRepository = {
             upsert: jest.fn(),
+            deleteById: jest.fn(),
         };
 
         const mockAggregateReadRepository = {
@@ -173,6 +174,123 @@ describe('PopulateMovieRatingMovieRatingsProjector', () => {
                     testError.message
                 );
                 expect(mockWriteRepository.upsert).toHaveBeenCalledTimes(1);
+            });
+        });
+
+        describe('MovieRatingDescriptionUpdatedEvent handling', () => {
+            const mockPayload = {
+                id: testUserId,
+                description: 'testdescription',
+            };
+
+            it('should handle MovieRatingDescriptionUpdatedEvent successfully', async () => {
+                const mockEvent = createMockEvent(MovieRatingDescriptionUpdatedEvent.name, mockPayload);
+                mockWriteRepository.upsert.mockResolvedValue(undefined);
+                const date = new Date();
+                mockReadRepository.getById.mockResolvedValue(new MovieRatingDocument(
+                    mockPayload.id,
+                    'testtitle',
+                    mockPayload.description,
+                    5,
+                    'testaccountId',
+                    date,
+                ));
+
+                await projector.handleMovieRatingMovieRatingsStreamEvents(mockEvent);
+
+                expect(mockLogger.log).toHaveBeenCalledWith(`Received: '${MovieRatingDescriptionUpdatedEvent.name}'`);
+                expect(mockWriteRepository.upsert).toHaveBeenCalledWith(
+                    expect.any(MovieRatingDocument),
+                    mockEvent.eventId,
+                    mockEvent.meta
+                );
+                expect(mockWriteRepository.upsert).toHaveBeenCalledTimes(1);
+
+                const calledDocument = mockWriteRepository.upsert.mock.calls[0][0] as MovieRatingDocument;
+                expect(calledDocument.id).toBe(mockPayload.id);
+                expect(calledDocument.description).toBe(mockPayload.description);
+                expect(calledDocument.stars).toBe(5);
+                expect(calledDocument.accountId).toBe('testaccountId');
+                expect(calledDocument.createdAt).toBe(date);
+            });
+
+            it('should propagate errors from repository', async () => {
+                const mockEvent = createMockEvent(MovieRatingDescriptionUpdatedEvent.name, mockPayload);
+                const testError = new Error('Update failed');
+                mockReadRepository.getById.mockResolvedValue(null);
+                mockWriteRepository.upsert.mockRejectedValue(testError);
+            });
+        });
+
+        describe('MovieRatingStarsUpdatedEvent handling', () => {
+            const mockPayload = {
+                id: testUserId,
+                stars: 5,
+            };
+
+            it('should handle MovieRatingStarsUpdatedEvent successfully', async () => {
+                const mockEvent = createMockEvent(MovieRatingStarsUpdatedEvent.name, mockPayload);
+                mockWriteRepository.upsert.mockResolvedValue(undefined);
+                const date = new Date();
+                mockReadRepository.getById.mockResolvedValue(new MovieRatingDocument(
+                    mockPayload.id,
+                    'testtitle',
+                    'testdescription',
+                    mockPayload.stars,
+                    'testaccountId',
+                    date,
+                ));
+
+                await projector.handleMovieRatingMovieRatingsStreamEvents(mockEvent);
+
+                expect(mockLogger.log).toHaveBeenCalledWith(`Received: '${MovieRatingStarsUpdatedEvent.name}'`);
+                expect(mockWriteRepository.upsert).toHaveBeenCalledWith(
+                    expect.any(MovieRatingDocument),
+                    mockEvent.eventId,
+                    mockEvent.meta
+                );
+                expect(mockWriteRepository.upsert).toHaveBeenCalledTimes(1);
+
+                const calledDocument = mockWriteRepository.upsert.mock.calls[0][0] as MovieRatingDocument;
+                expect(calledDocument.id).toBe(mockPayload.id);
+                expect(calledDocument.stars).toBe(mockPayload.stars);
+                expect(calledDocument.description).toBe('testdescription');
+                expect(calledDocument.accountId).toBe('testaccountId');
+                expect(calledDocument.createdAt).toBe(date);
+            });
+
+            it('should propagate errors from repository', async () => {
+                const mockEvent = createMockEvent(MovieRatingStarsUpdatedEvent.name, mockPayload);
+                const testError = new Error('Update failed');
+                mockReadRepository.getById.mockResolvedValue(null);
+                mockWriteRepository.upsert.mockRejectedValue(testError);
+            });
+        });
+
+        describe('MovieRatingDeletedEvent handling', () => {
+            const mockPayload = {
+                id: testUserId,
+            };
+
+            it('should handle MovieRatingDeletedEvent successfully', async () => {
+                const mockEvent = createMockEvent(MovieRatingDeletedEvent.name, mockPayload);
+                mockWriteRepository.deleteById.mockResolvedValue(undefined);
+
+                await projector.handleMovieRatingMovieRatingsStreamEvents(mockEvent);
+
+                expect(mockLogger.log).toHaveBeenCalledWith(`Received: '${MovieRatingDeletedEvent.name}'`);
+                expect(mockWriteRepository.deleteById).toHaveBeenCalledWith(mockPayload.id, mockEvent.eventId);
+            });
+
+            it('should propagate errors from repository', async () => {
+                const mockEvent = createMockEvent(MovieRatingDeletedEvent.name, mockPayload);
+                const testError = new Error('Delete failed');
+                mockWriteRepository.deleteById.mockRejectedValue(testError);
+
+                await expect(projector.handleMovieRatingMovieRatingsStreamEvents(mockEvent)).rejects.toThrow(
+                    testError.message
+                );
+                expect(mockWriteRepository.deleteById).toHaveBeenCalledTimes(1);
             });
         });
 
