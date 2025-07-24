@@ -3,6 +3,7 @@ import { CommandBusService } from '@backend-monorepo/boilerplate';
 import { AccountId, Username } from '@backend-monorepo/domain';
 import { UpdateUsernameCommand } from '../../../../../../application/use-cases/update-username/update-username.command';
 import { JwtAuthGuard } from '../../../../../util/guards/jwt.guard';
+import { OwnAccountGuard } from '../../../../../util/guards/own-account.guard';
 
 @Controller('/v1/accounts/:id/update-username')
 export class UpdateUsernameV1Action {
@@ -10,7 +11,7 @@ export class UpdateUsernameV1Action {
     private readonly commandBus: CommandBusService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, OwnAccountGuard)
   @Post()
   public async index(
     @Param('id', ParseUUIDPipe) id: string,
