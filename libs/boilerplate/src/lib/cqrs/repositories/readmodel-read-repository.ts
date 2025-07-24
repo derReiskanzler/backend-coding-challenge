@@ -52,7 +52,7 @@ export abstract class ReadmodelReadRepository {
             throw new Error('Readmodel class does not extend ReadmodelDocument');
         }
 
-        const denormalizedDoc = document.document;
+        const denormalizedDoc = document['document'];
         const assigned = Object.assign(new ReadmodelClass(), denormalizedDoc);
 
         return assigned;
@@ -110,7 +110,7 @@ export abstract class ReadmodelReadRepository {
 
         const [documents, count] = await queryBuilder.getManyAndCount();
 
-        const denormalizedDocuments = documents.map((doc) => Object.assign(new ReadmodelClass(), doc.document));
+        const denormalizedDocuments = documents.map((doc) => Object.assign(new ReadmodelClass(), doc['document']));
 
         return {
             data: denormalizedDocuments,

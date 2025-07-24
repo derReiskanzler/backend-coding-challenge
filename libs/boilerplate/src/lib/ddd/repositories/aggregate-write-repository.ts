@@ -39,8 +39,12 @@ export abstract class AggregateWriteRepository {
                 
                 await this.saveAggregateState(aggregate);
             });
-        } catch (error) {
-            this.logger.error(`Failed to save aggregate: ${error.message}`);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                this.logger.error(`Failed to save aggregate: ${error.message}`);
+            } else {
+                this.logger.error(`Failed to save aggregate: ${error}`);
+            }
             throw error;
         }
 

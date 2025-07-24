@@ -58,8 +58,12 @@ export abstract class ReadmodelWriteRepository {
     
                 await this.updateProjectionOffset(manager, readmodel, eventId);
             });
-        } catch (error) {
-            this.logger.error(`Failed to save readmodel document: ${error.message}`);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                this.logger.error(`Failed to save readmodel document: ${error.message}`);
+            } else {
+                this.logger.error(`Failed to save readmodel document: ${error}`);
+            }
         }
         
     }
@@ -84,8 +88,12 @@ export abstract class ReadmodelWriteRepository {
 
                 await this.updateProjectionOffset(manager, readmodel, eventId);
             });
-        } catch (error) {
-            this.logger.error(`Failed to delete readmodel document: ${error.message}`);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                this.logger.error(`Failed to delete readmodel document: ${error.message}`);
+            } else {
+                this.logger.error(`Failed to delete readmodel document: ${error}`);
+            }
         }
     }
 
@@ -106,8 +114,12 @@ export abstract class ReadmodelWriteRepository {
                     processedEventCount: 1,
                 });
             }
-        } catch (error) {
-            this.logger.error(`Failed to save readmodel projection offset: ${error.message}`);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                this.logger.error(`Failed to save readmodel projection offset: ${error.message}`);
+            } else {
+                this.logger.error(`Failed to save readmodel projection offset: ${error}`);
+            }
         }
     }
 }
