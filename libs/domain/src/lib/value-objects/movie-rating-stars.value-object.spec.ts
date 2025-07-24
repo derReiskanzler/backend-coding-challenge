@@ -63,7 +63,7 @@ describe('MovieRatingStars Value Object', () => {
             const movieRatingStars1 = MovieRatingStars.fromNumber(movieRatingStarsValue);
             const movieRatingStars2 = MovieRatingStars.fromNumber(movieRatingStarsValue);
 
-            expect(movieRatingStars1.toNumber()).toBe(movieRatingStars2.toNumber());
+            expect(movieRatingStars1.equals(movieRatingStars2)).toBe(true);
         });
 
         it('should be different instances even with same number value', () => {
@@ -72,7 +72,7 @@ describe('MovieRatingStars Value Object', () => {
             const movieRatingStars2 = MovieRatingStars.fromNumber(movieRatingStarsValue);
 
             expect(movieRatingStars1).not.toBe(movieRatingStars2);
-            expect(movieRatingStars1.toNumber()).toBe(movieRatingStars2.toNumber());
+            expect(movieRatingStars1.equals(movieRatingStars2)).toBe(true);
         });
     });
 });

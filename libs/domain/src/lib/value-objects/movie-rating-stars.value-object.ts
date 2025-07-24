@@ -16,4 +16,8 @@ export class MovieRatingStars {
     public toString(): string {
         return this.value.toString();
     }
+
+    public equals(other: MovieRatingStars): boolean {
+        return this.value === other.toNumber();
+    }
 }

@@ -2,8 +2,11 @@ import {
     AccountId,
     Description,
     MovieRatingCreatedEvent,
+    MovieRatingDeletedEvent,
+    MovieRatingDescriptionUpdatedEvent,
     MovieRatingId,
     MovieRatingStars,
+    MovieRatingStarsUpdatedEvent,
     MovieRatingTitleUpdatedEvent,
     Title,
 } from '@backend-monorepo/domain';
@@ -65,7 +68,53 @@ export class MovieRating extends AggregateRoot {
 
     public onMovieRatingTitleUpdatedEvent(event: MovieRatingTitleUpdatedEvent): void {
         this.state = this.state.with({
-            title: event.getTitle(),
+            [MovieRatingState.TITLE]: event.getTitle(),
+        });
+    }
+
+    public updateDescription(description: Description): void {
+        if (description.equals(Description.fromString(this.state.getDescription()))) {
+            return;
+        }
+
+        this.recordThat(
+            MovieRatingDescriptionUpdatedEvent.create(this.state.getId().toString(), description.toString()),
+        );
+    }
+
+    public onMovieRatingDescriptionUpdatedEvent(event: MovieRatingDescriptionUpdatedEvent): void {
+        this.state = this.state.with({
+            [MovieRatingState.DESCRIPTION]: event.getDescription(),
+        });
+    }
+
+    public updateStars(stars: MovieRatingStars): void {
+        if (stars.equals(MovieRatingStars.fromNumber(this.state.getStars()))) {
+            return;
+        }
+
+        this.recordThat(
+            MovieRatingStarsUpdatedEvent.create(this.state.getId().toString(), stars.toNumber()),
+        );
+    }
+
+    public onMovieRatingStarsUpdatedEvent(event: MovieRatingStarsUpdatedEvent): void {
+        this.state = this.state.with({
+            [MovieRatingState.STARS]: event.getStars(),
+        });
+    }
+
+    public delete(): void {
+        this.recordThat(
+            MovieRatingDeletedEvent.create(this.state.getId().toString()),
+        );
+    }
+
+    public onMovieRatingDeletedEvent(): void {
+        this.state = this.state.with({
+            [MovieRatingState.TITLE]: 'DELETED',
+            [MovieRatingState.DESCRIPTION]: 'DELETED',
+            [MovieRatingState.STARS]: 0,
         });
     }
 }
