@@ -25,19 +25,6 @@ describe('SignUpCommand', () => {
         expect(command.getPassword()).toBe(validPassword);
     });
 
-    it('should return the username passed in constructor', () => {
-        const command = new SignUpCommand(validUsername, validPassword);
-
-        expect(command.getUsername()).toBe(validUsername);
-        expect(command.getUsername().toString()).toBe('john.doe');
-    });
-    it('should return the password passed in constructor', () => {
-        const command = new SignUpCommand(validUsername, validPassword);
-
-        expect(command.getPassword()).toBe(validPassword);
-        expect(command.getPassword().toString()).toBe('ValidPW1!');
-    });
-
     it('should extend Command class', () => {
         const command = new SignUpCommand(validUsername, validPassword);
 

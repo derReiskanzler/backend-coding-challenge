@@ -31,33 +31,6 @@ describe('CreateMovieRatingCommand', () => {
         expect(command.getAccountId()).toBe(validAccountId);
     });
 
-    it('should return the title passed in constructor', () => {
-        const command = new CreateMovieRatingCommand(validTitle, validDescription, validStars, validAccountId);
-
-        expect(command.getTitle()).toBe(validTitle);
-        expect(command.getTitle().toString()).toBe('The Matrix');
-    });
-    it('should return the description passed in constructor', () => {
-        const command = new CreateMovieRatingCommand(validTitle, validDescription, validStars, validAccountId);
-
-        expect(command.getDescription()).toBe(validDescription);
-        expect(command.getDescription().toString()).toBe('A computer hacker learns about the true nature of his reality and his role in the war against its controllers.');
-    });
-
-    it('should return the stars passed in constructor', () => {
-        const command = new CreateMovieRatingCommand(validTitle, validDescription, validStars, validAccountId);
-
-        expect(command.getStars()).toBe(validStars);
-        expect(command.getStars().toNumber()).toBe(5);
-    });
-
-    it('should return the accountId passed in constructor', () => {
-        const command = new CreateMovieRatingCommand(validTitle, validDescription, validStars, validAccountId);
-
-        expect(command.getAccountId()).toBe(validAccountId);
-        expect(command.getAccountId().toString()).toBe('123e4567-e89b-12d3-a456-426614174000');
-    });
-
     it('should extend Command class', () => {
         const command = new CreateMovieRatingCommand(validTitle, validDescription, validStars, validAccountId);
 

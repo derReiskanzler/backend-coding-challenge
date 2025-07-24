@@ -16,12 +16,6 @@ describe('GetMovieRatingQuery', () => {
         expect(query).toBeInstanceOf(Query);
     });
 
-    it('should store movie rating id correctly', () => {
-        const query = new GetMovieRatingQuery(validMovieRatingId);
-
-        expect(query.getId()).toBe(validMovieRatingId);
-    });
-
     it('should return the movie rating id passed in constructor', () => {
         const query = new GetMovieRatingQuery(validMovieRatingId);
 

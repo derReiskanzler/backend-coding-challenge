@@ -25,19 +25,6 @@ describe('UpdateUsernameCommand', () => {
         expect(command.getId()).toBe(validId);
     });
 
-    it('should return the username passed in constructor', () => {
-        const command = new UpdateUsernameCommand(validId, validUsername);
-
-        expect(command.getUsername()).toBe(validUsername);
-        expect(command.getUsername().toString()).toBe('john.doe');
-    });
-    it('should return the id passed in constructor', () => {
-        const command = new UpdateUsernameCommand(validId, validUsername);
-
-        expect(command.getId()).toBe(validId);
-        expect(command.getId().toString()).toBe('123e4567-e89b-12d3-a456-426614174000');
-    });
-
     it('should extend Command class', () => {
         const command = new UpdateUsernameCommand(validId, validUsername);
 
