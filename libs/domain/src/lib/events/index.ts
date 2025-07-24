@@ -5,7 +5,10 @@ export * from './auth/username-updated.event';
 
 // Movie Rating
 export * from './movie-rating/movie-rating-created.event';
+export * from './movie-rating/movie-rating-deleted.event';
+export * from './movie-rating/movie-rating-description-updated.event';
 export * from './movie-rating/movie-rating-event-mapping';
+export * from './movie-rating/movie-rating-stars-updated.event';
 export * from './movie-rating/movie-rating-title-updated.event';
 
 export * from './event-mapping';
