@@ -4,7 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 
 export interface ErrorResponse {
-    success: boolean;
     error: any;
     message: string;
     statusCode: number;
@@ -29,7 +28,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
         const res: any = exception.getResponse();
 
         const errorResponse: ErrorResponse = {
-            success: false,
             error: {
                 name: exception.name,
                 message: message,
