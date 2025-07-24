@@ -4,16 +4,22 @@ import { PopulateMovieRatingMovieRatingsProjector } from './populate-movie-ratin
 import { MovieRatingV1ReadmodelWriteRepository } from '../../../outbound/repository/v1/write/movie-rating-readmodel-write.repository';
 import { MovieRatingDocument } from '../../../../application/documents/movie-rating.document';
 import { BaseStreamEvent, Metadata } from '@backend-monorepo/boilerplate';
-import { MovieRatingCreatedEvent } from '@backend-monorepo/domain';
+import { MovieRatingCreatedEvent, MovieRatingTitleUpdatedEvent } from '@backend-monorepo/domain';
+import { MovieRatingV1ReadmodelReadRepository } from '../../../outbound/repository/v1/read/movie-rating-readmodel-read.repository';
 
 describe('PopulateMovieRatingMovieRatingsProjector', () => {
     let projector: PopulateMovieRatingMovieRatingsProjector;
     let mockWriteRepository: jest.Mocked<MovieRatingV1ReadmodelWriteRepository>;
+    let mockReadRepository: jest.Mocked<MovieRatingV1ReadmodelReadRepository>;
     let mockLogger: jest.Mocked<Logger>;
 
     beforeEach(async () => {
         const mockRepository = {
             upsert: jest.fn(),
+        };
+
+        const mockAggregateReadRepository = {
+            getById: jest.fn(),
         };
 
         const module: TestingModule = await Test.createTestingModule({
@@ -23,11 +29,16 @@ describe('PopulateMovieRatingMovieRatingsProjector', () => {
                     provide: MovieRatingV1ReadmodelWriteRepository,
                     useValue: mockRepository,
                 },
+                {
+                    provide: MovieRatingV1ReadmodelReadRepository,
+                    useValue: mockAggregateReadRepository,
+                },
             ],
         }).compile();
 
         projector = module.get<PopulateMovieRatingMovieRatingsProjector>(PopulateMovieRatingMovieRatingsProjector);
         mockWriteRepository = module.get(MovieRatingV1ReadmodelWriteRepository);
+        mockReadRepository = module.get(MovieRatingV1ReadmodelReadRepository);
 
         mockLogger = {
             log: jest.fn(),
@@ -96,6 +107,66 @@ describe('PopulateMovieRatingMovieRatingsProjector', () => {
             it('should propagate errors from repository', async () => {
                 const mockEvent = createMockEvent(MovieRatingCreatedEvent.name, mockPayload);
                 const testError = new Error('Update failed');
+                mockWriteRepository.upsert.mockRejectedValue(testError);
+
+                await expect(projector.handleMovieRatingMovieRatingsStreamEvents(mockEvent)).rejects.toThrow(
+                    testError.message
+                );
+                expect(mockWriteRepository.upsert).toHaveBeenCalledTimes(1);
+            });
+        });
+
+        describe('MovieRatingTitleUpdatedEvent handling', () => {
+            const mockPayload = {
+                id: testUserId,
+                title: 'testtitle',
+            };
+
+            it('should handle MovieRatingTitleUpdatedEvent successfully', async () => {
+                const mockEvent = createMockEvent(MovieRatingTitleUpdatedEvent.name, mockPayload);
+                mockWriteRepository.upsert.mockResolvedValue(undefined);
+                const date = new Date();
+                mockReadRepository.getById.mockResolvedValue(new MovieRatingDocument(
+                    mockPayload.id,
+                    mockPayload.title,
+                    'testdescription',
+                    5,
+                    'testaccountId',
+                    date,
+                ));
+
+                await projector.handleMovieRatingMovieRatingsStreamEvents(mockEvent);
+
+                expect(mockLogger.log).toHaveBeenCalledWith(`Received: '${MovieRatingTitleUpdatedEvent.name}'`);
+                expect(mockWriteRepository.upsert).toHaveBeenCalledWith(
+                    expect.any(MovieRatingDocument),
+                    mockEvent.eventId,
+                    mockEvent.meta
+                );
+                expect(mockWriteRepository.upsert).toHaveBeenCalledTimes(1);
+
+                const calledDocument = mockWriteRepository.upsert.mock.calls[0][0] as MovieRatingDocument;
+                expect(calledDocument.id).toBe(mockPayload.id);
+                expect(calledDocument.title).toBe(mockPayload.title);
+                expect(calledDocument.description).toBe('testdescription');
+                expect(calledDocument.stars).toBe(5);
+                expect(calledDocument.accountId).toBe('testaccountId');
+                expect(calledDocument.createdAt).toBe(date);
+            });
+
+            it('should propagate errors from repository', async () => {
+                const mockEvent = createMockEvent(MovieRatingTitleUpdatedEvent.name, mockPayload);
+                const testError = new Error('Update failed');
+                mockReadRepository.getById.mockResolvedValue(
+                    new MovieRatingDocument(
+                        mockPayload.id,
+                        mockPayload.title,
+                        'testdescription',
+                        5,
+                        'testaccountId',
+                        new Date(),
+                    ),
+                );
                 mockWriteRepository.upsert.mockRejectedValue(testError);
 
                 await expect(projector.handleMovieRatingMovieRatingsStreamEvents(mockEvent)).rejects.toThrow(
