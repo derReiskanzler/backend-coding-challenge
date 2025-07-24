@@ -1,6 +1,23 @@
 version: '3.8'
 
 services:
+  be-movie-rating-service:
+    build:
+      context: .
+      dockerfile: apps/be-movie-rating-service/Dockerfile
+      target: production
+    ports:
+      - "3001:3001"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3001
+      - NODE_ENV=development
+    restart: unless-stopped
+    depends_on:
+      - kafka
+      - movie_rating_db
+      - event_store_db
+
   be-auth-service:
     build:
       context: .
@@ -30,6 +47,19 @@ services:
       - "5433:5432"
     volumes:
       - auth_db-data:/var/lib/postgresql/data
+
+  movie_rating_db:
+    container_name: movie_rating_db_container
+    image: "postgres"
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DATABASE: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - movie_rating_db-data:/var/lib/postgresql/data
 
   event_store_db:
     container_name: event_store_db_container
@@ -83,4 +113,5 @@ services:
 
 volumes:
   auth_db-data:
+  movie_rating_db-data:
   event_store_db-data:
