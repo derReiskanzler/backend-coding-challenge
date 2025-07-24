@@ -33,7 +33,7 @@ describe('MovieRatingStars Value Object', () => {
         });
     });
 
-    describe('toString', () => {
+    describe('toNumber', () => {
         it('should return the original number value', () => {
             const originalValue = 1;
             const movieRatingStars = MovieRatingStars.fromNumber(originalValue);
@@ -41,6 +41,17 @@ describe('MovieRatingStars Value Object', () => {
             const result = movieRatingStars.toNumber();
 
             expect(result).toBe(originalValue);
+        });
+    });
+
+    describe('toString', () => {
+        it('should return the original number value as string', () => {
+            const originalValue = 1;
+            const movieRatingStars = MovieRatingStars.fromNumber(originalValue);
+
+            const result = movieRatingStars.toString();
+
+            expect(result).toBe(originalValue.toString());
         });
     });
 
