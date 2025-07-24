@@ -6,6 +6,7 @@ export class MovieRatingDocument extends ReadmodelDocument {
     public static DESCRIPTION = 'description';
     public static STARS = 'stars';
     public static ACCOUNT_ID = 'accountId';
+    public static CREATED_AT = 'createdAt';
 
     constructor(
         public readonly id: string,
@@ -13,6 +14,7 @@ export class MovieRatingDocument extends ReadmodelDocument {
         public readonly description: string,
         public readonly stars: number,
         public readonly accountId: string,
+        public readonly createdAt: Date,
     ) {
         super({
             [MovieRatingDocument.ID]: id,
@@ -20,6 +22,7 @@ export class MovieRatingDocument extends ReadmodelDocument {
             [MovieRatingDocument.DESCRIPTION]: description,
             [MovieRatingDocument.STARS]: stars,
             [MovieRatingDocument.ACCOUNT_ID]: accountId,
+            [MovieRatingDocument.CREATED_AT]: createdAt,
         });
     }
 }

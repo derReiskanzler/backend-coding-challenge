@@ -17,6 +17,9 @@ import { MovieRatingV1ReadmodelReadRepository } from './infrastructure/outbound/
 import { GetMovieRatingDocumentRepositoryInterface } from './application/use-cases/get-movie-rating/get-movie-rating-document.repository.interface';
 import { GetMovieRatingQueryHandler } from './application/use-cases/get-movie-rating/get-movie-rating.query-handler';
 import { GetMovieRatingV1Action } from './infrastructure/inbound/api/v1/movie-ratings/get-movie-rating/get-movie-rating.action';
+import { GetMovieRatingsQueryHandler } from './application/use-cases/get-movie-ratings/get-movie-ratings.query-handler';
+import { GetMovieRatingsV1Action } from './infrastructure/inbound/api/v1/movie-ratings/get-movie-ratings/get-movie-ratings.action';
+import { GetMovieRatingsDocumentRepositoryInterface } from './application/use-cases/get-movie-ratings/get-movie-ratings-document.repository.interface';
 
 @Module({
     imports: [
@@ -81,6 +84,7 @@ import { GetMovieRatingV1Action } from './infrastructure/inbound/api/v1/movie-ra
         // API - Movie Ratings
         CreateMovieRatingV1Action,
         GetMovieRatingV1Action,
+        GetMovieRatingsV1Action,
 
         // Projectors
         PopulateMovieRatingMovieRatingsProjector,
@@ -94,12 +98,14 @@ import { GetMovieRatingV1Action } from './infrastructure/inbound/api/v1/movie-ra
         MovieRatingV1ReadmodelWriteRepository,
         MovieRatingV1ReadmodelReadRepository,
         { provide: GetMovieRatingDocumentRepositoryInterface, useClass: MovieRatingV1ReadmodelReadRepository },
-
+        { provide: GetMovieRatingsDocumentRepositoryInterface, useClass: MovieRatingV1ReadmodelReadRepository },
+        
         // Command Handlers
         CreateMovieRatingCommandHandler,
 
         // Query Handlers
         GetMovieRatingQueryHandler,
+        GetMovieRatingsQueryHandler,
     ],
 })
 export class MovieRatingModule {}

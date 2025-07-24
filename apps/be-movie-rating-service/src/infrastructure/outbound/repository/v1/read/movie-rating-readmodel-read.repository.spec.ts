@@ -6,12 +6,14 @@ jest.mock('@backend-monorepo/boilerplate', () => ({
     ...jest.requireActual('@backend-monorepo/boilerplate'),
     ReadmodelReadRepository: class MockReadmodelReadRepository {
         protected getDocument = jest.fn();
+        protected getDocuments = jest.fn();
     },
 }));
 
 describe('MovieRatingV1ReadmodelReadRepository', () => {
     let repository: MovieRatingV1ReadmodelReadRepository;
     let mockGetDocument: jest.Mock;
+    let mockGetDocuments: jest.Mock;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -20,6 +22,7 @@ describe('MovieRatingV1ReadmodelReadRepository', () => {
 
         repository = module.get<MovieRatingV1ReadmodelReadRepository>(MovieRatingV1ReadmodelReadRepository);
         mockGetDocument = (repository as any).getDocument;
+        mockGetDocuments = (repository as any).getDocuments;
         
         jest.clearAllMocks();
     });
@@ -28,7 +31,7 @@ describe('MovieRatingV1ReadmodelReadRepository', () => {
         const testUserId = '123e4567-e89b-12d3-a456-426614174000';
 
         it('should return user document when found', async () => {
-            const mockUserDocument = new MovieRatingDocument(testUserId, 'testtitle', 'testdescription', 1, 'testaccountId');
+            const mockUserDocument = new MovieRatingDocument(testUserId, 'testtitle', 'testdescription', 1, 'testaccountId', new Date());
             mockGetDocument.mockResolvedValue(mockUserDocument);
 
             const result = await repository.getById(testUserId);
@@ -73,11 +76,51 @@ describe('MovieRatingV1ReadmodelReadRepository', () => {
         });
     });
 
+    describe('getMany', () => {
+        const accountId1 = '123e4567-e89b-12d3-a456-426614174000';
+        const accountId2 = '123e4567-e89b-12d3-a456-426614174001';
+        const title1 = 'title1';
+        const title2 = 'title2';
+
+        it('should return movie ratings successfully', async () => {
+            const mockMovieRatings = [
+                new MovieRatingDocument('1', title1, 'description1', 1, accountId1, new Date()),
+                new MovieRatingDocument('2', title2, 'description2', 2, accountId1, new Date()),
+            ];
+
+            mockGetDocuments.mockResolvedValue(mockMovieRatings);
+
+            const result = await repository.getMany({
+                accountId: accountId1,
+                title: title1,
+            }, {
+                skip: 0,
+                take: 10,
+            });
+
+            expect(result).toEqual(mockMovieRatings);
+        });
+
+        it('should return empty array when no movie ratings found', async () => {
+            mockGetDocuments.mockResolvedValue([]);
+
+            const result = await repository.getMany({
+                accountId: accountId1,
+                title: title1,
+            }, {
+                skip: 0,
+                take: 10,
+            });
+
+            expect(result).toEqual([]);
+        });
+    });
+
     it('should handle multiple consecutive read operations', async () => {
         const testMovieRatingId1 = '123e4567-e89b-12d3-a456-426614174000';
         const testMovieRatingId2 = '123e4567-e89b-12d3-a456-426614174001';
-        const userDoc1 = new MovieRatingDocument(testMovieRatingId1, 'title1', 'description1', 1, 'accountId1');
-        const userDoc2 = new MovieRatingDocument(testMovieRatingId2, 'title2', 'description2', 2, 'accountId2');
+        const userDoc1 = new MovieRatingDocument(testMovieRatingId1, 'title1', 'description1', 1, 'accountId1', new Date());
+        const userDoc2 = new MovieRatingDocument(testMovieRatingId2, 'title2', 'description2', 2, 'accountId2', new Date());
 
         mockGetDocument.mockResolvedValueOnce(userDoc1);
         mockGetDocument.mockResolvedValueOnce(userDoc2);

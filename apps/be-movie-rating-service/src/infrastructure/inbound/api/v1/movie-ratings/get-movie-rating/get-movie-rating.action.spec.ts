@@ -3,7 +3,6 @@ import { Response } from 'express';
 import { GetMovieRatingV1Action } from './get-movie-rating.action';
 import { AUTH_SERVICE, AuthenticatedUser, QueryBusService } from '@backend-monorepo/boilerplate';
 import { MovieRatingId } from '@backend-monorepo/domain';
-import { CreateMovieRatingDto } from '../../../dtos/create-movie-rating.dto';
 import { GetMovieRatingQuery } from '../../../../../../application/use-cases/get-movie-rating/get-movie-rating.query';
 import { MovieRatingDocument } from '../../../../../../application/documents/movie-rating.document';
 import { of } from 'rxjs';
@@ -54,12 +53,6 @@ describe('GetMovieRatingV1Action', () => {
     });
 
     describe('index', () => {
-        const validDto: CreateMovieRatingDto = {
-            title: 'testtitle',
-            description: 'testdescription',
-            stars: 5,
-        };
-
         const mockMovieRatingId = '123e4567-e89b-12d3-a456-426614174000';
         const mockMovieRating = new MovieRatingDocument(
             mockMovieRatingId,
@@ -67,6 +60,7 @@ describe('GetMovieRatingV1Action', () => {
             'testdescription',
             5,
             '123e4567-e89b-12d3-a456-426614174000',
+            new Date(),
         );
 
         const validQuery = new GetMovieRatingQuery(
@@ -136,6 +130,7 @@ describe('GetMovieRatingV1Action', () => {
             'testdescription',
             5,
             '123e4567-e89b-12d3-a456-426614174000',
+            new Date(),
         );
 
         const validQuery = new GetMovieRatingQuery(

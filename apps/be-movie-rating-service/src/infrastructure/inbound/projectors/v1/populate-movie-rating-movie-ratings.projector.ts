@@ -24,6 +24,7 @@ export class PopulateMovieRatingMovieRatingsProjector {
                         event.payload['description'],
                         event.payload['stars'],
                         event.payload['accountId'],
+                        event.payload['createdAt'],
                     ),
                     event.eventId,
                     event.meta,

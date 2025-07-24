@@ -37,7 +37,7 @@ describe('MovieRatingV1ReadmodelWriteRepository', () => {
         const testCausationId = '123e4567-e89b-12d3-a456-426614174002';
 
         beforeEach(() => {
-            mockMovieRatingDocument = new MovieRatingDocument(testMovieRatingId, 'testtitle', 'testdescription', 5, 'testaccountId');
+            mockMovieRatingDocument = new MovieRatingDocument(testMovieRatingId, 'testtitle', 'testdescription', 5, 'testaccountId', new Date());
             mockMetadata = {
                 causationId: testCausationId,
                 causationName: 'TestCommand',
@@ -129,8 +129,8 @@ describe('MovieRatingV1ReadmodelWriteRepository', () => {
     });
 
     it('should handle multiple consecutive operations', async () => {
-        const movieRatingDoc1 = new MovieRatingDocument('movie-rating-1', 'title1', 'description1', 5, 'accountId1');
-        const movieRatingDoc2 = new MovieRatingDocument('movie-rating-2', 'title2', 'description2', 5, 'accountId2');
+        const movieRatingDoc1 = new MovieRatingDocument('movie-rating-1', 'title1', 'description1', 5, 'accountId1', new Date());
+        const movieRatingDoc2 = new MovieRatingDocument('movie-rating-2', 'title2', 'description2', 5, 'accountId2', new Date());
         const metadata = { causationId: 'cmd-123', causationName: 'TestCommand' };
 
         mockUpsertDocument.mockResolvedValue(undefined);

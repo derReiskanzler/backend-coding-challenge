@@ -7,21 +7,23 @@ describe('MovieRatingDocument', () => {
     const validDescription = 'A computer hacker learns about the true nature of his reality and is drawn into a rebellion against powerful artificial intelligence.';
     const validStars = 5;
     const validAccountId = '123e4567-e89b-12d3-a456-426614174000';
+    const validCreatedAt = new Date();
 
     it('should create instance with valid id and username', () => {
-        const document = new MovieRatingDocument(validId, validTitle, validDescription, validStars, validAccountId);
+        const document = new MovieRatingDocument(validId, validTitle, validDescription, validStars, validAccountId, validCreatedAt);
 
         expect(document).toBeInstanceOf(MovieRatingDocument);
     });
 
     it('should store id and title, description, stars and accountId correctly', () => {
-        const document = new MovieRatingDocument(validId, validTitle, validDescription, validStars, validAccountId);
+        const document = new MovieRatingDocument(validId, validTitle, validDescription, validStars, validAccountId, validCreatedAt);
 
         expect(document.id).toBe(validId);
         expect(document.title).toBe(validTitle);
         expect(document.description).toBe(validDescription);
         expect(document.stars).toBe(validStars);
         expect(document.accountId).toBe(validAccountId);
+        expect(document.createdAt).toBe(validCreatedAt);
     });
 
     it('should have correct ID constant', () => {
@@ -40,19 +42,24 @@ describe('MovieRatingDocument', () => {
         expect(MovieRatingDocument.STARS).toBe('stars');
     });
 
+    it('should have correct CREATED_AT constant', () => {
+        expect(MovieRatingDocument.CREATED_AT).toBe('createdAt');
+    });
+
     it('should extend ReadmodelDocument class', () => {
-        const document = new MovieRatingDocument(validId, validTitle, validDescription, validStars, validAccountId);
+        const document = new MovieRatingDocument(validId, validTitle, validDescription, validStars, validAccountId, validCreatedAt);
 
         expect(document).toBeInstanceOf(ReadmodelDocument);
     });
 
     it('should call parent constructor with correct mapping', () => {
-        const document = new MovieRatingDocument(validId, validTitle, validDescription, validStars, validAccountId);
+        const document = new MovieRatingDocument(validId, validTitle, validDescription, validStars, validAccountId, validCreatedAt);
 
         expect(document).toHaveProperty('id', validId);
         expect(document).toHaveProperty('title', validTitle);
         expect(document).toHaveProperty('description', validDescription);
         expect(document).toHaveProperty('stars', validStars);
         expect(document).toHaveProperty('accountId', validAccountId);
+        expect(document).toHaveProperty('createdAt', validCreatedAt);
     });
 });

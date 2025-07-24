@@ -31,6 +31,7 @@ describe('GetMovieRatingQueryHandler', () => {
             'testdescription',
             5,
             '123e4567-e89b-12d3-a456-426614174000',
+            new Date(),
         );
 
         it('should get movie rating successfully', async () => {
@@ -59,8 +60,8 @@ describe('GetMovieRatingQueryHandler', () => {
             it('should handle concurrent get movie rating', async () => {
                 const testMovieRatingId1 = '123e4567-e89b-12d3-a456-426614174000';
                 const testMovieRatingId2 = '123e4567-e89b-12d3-a456-426614174001';
-                const userDoc1 = new MovieRatingDocument(testMovieRatingId1, 'title1', 'description1', 1, 'accountId1');
-                const userDoc2 = new MovieRatingDocument(testMovieRatingId2, 'title2', 'description2', 2, 'accountId2');
+                const userDoc1 = new MovieRatingDocument(testMovieRatingId1, 'title1', 'description1', 1, 'accountId1', new Date());
+                const userDoc2 = new MovieRatingDocument(testMovieRatingId2, 'title2', 'description2', 2, 'accountId2', new Date());
 
                 mockReadRepository.getById.mockResolvedValueOnce(userDoc1);
                 mockReadRepository.getById.mockResolvedValueOnce(userDoc2);

@@ -67,6 +67,7 @@ describe('PopulateMovieRatingMovieRatingsProjector', () => {
                 description: 'testdescription',
                 stars: 5,
                 accountId: 'testaccountId',
+                createdAt: new Date(),
             };
 
             it('should handle MovieRatingCreatedEvent successfully', async () => {
@@ -89,6 +90,7 @@ describe('PopulateMovieRatingMovieRatingsProjector', () => {
                 expect(calledDocument.description).toBe(mockPayload.description);
                 expect(calledDocument.stars).toBe(mockPayload.stars);
                 expect(calledDocument.accountId).toBe(mockPayload.accountId);
+                expect(calledDocument.createdAt).toBe(mockPayload.createdAt);
             });
 
             it('should propagate errors from repository', async () => {
@@ -122,6 +124,7 @@ describe('PopulateMovieRatingMovieRatingsProjector', () => {
                     description: 'test-description',
                     stars: 5,
                     accountId: 'test-accountId',
+                    createdAt: new Date(),
                 });
                 mockEvent.meta = {
                     causationId: testCausationId,
