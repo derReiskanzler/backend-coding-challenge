@@ -11,6 +11,9 @@ import { MovieRatingV1WriteRepository } from './infrastructure/outbound/reposito
 import { CreateMovieRatingCommandHandler } from './application/use-cases/create-movie-rating/create-movie-rating.command-handler';
 import { MovieRatingRepositoryInterface as CreateMovieRatingRepositoryInterface } from './application/use-cases/create-movie-rating/movie-rating.repository.interface';
 import { MovieRatingRepositoryInterface as UpdateTitleRepositoryInterface } from './application/use-cases/update-title/movie-rating.repository.interface';
+import { MovieRatingRepositoryInterface as UpdateDescriptionRepositoryInterface } from './application/use-cases/update-description/movie-rating.repository.interface';
+import { MovieRatingRepositoryInterface as UpdateStarsRepositoryInterface } from './application/use-cases/update-stars/movie-rating.repository.interface';
+import { MovieRatingRepositoryInterface as DeleteMovieRatingRepositoryInterface } from './application/use-cases/delete-movie-rating/movie-rating.repository.interface';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MovieRatingV1ReadmodelWriteRepository } from './infrastructure/outbound/repository/v1/write/movie-rating-readmodel-write.repository';
 import { PopulateMovieRatingMovieRatingsProjector } from './infrastructure/inbound/projectors/v1/populate-movie-rating-movie-ratings.projector';
@@ -22,6 +25,9 @@ import { GetMovieRatingsQueryHandler } from './application/use-cases/get-movie-r
 import { GetMovieRatingsV1Action } from './infrastructure/inbound/api/v1/movie-ratings/get-movie-ratings/get-movie-ratings.action';
 import { GetMovieRatingsDocumentRepositoryInterface } from './application/use-cases/get-movie-ratings/get-movie-ratings-document.repository.interface';
 import { MovieRatingReadRepositoryInterface as UpdateTitleReadRepositoryInterface } from './application/use-cases/update-title/movie-rating-read.repository.interface';
+import { MovieRatingReadRepositoryInterface as UpdateDescriptionReadRepositoryInterface } from './application/use-cases/update-description/movie-rating-read.repository.interface';
+import { MovieRatingReadRepositoryInterface as UpdateStarsReadRepositoryInterface } from './application/use-cases/update-stars/movie-rating-read.repository.interface';
+import { MovieRatingReadRepositoryInterface as DeleteMovieRatingReadRepositoryInterface } from './application/use-cases/delete-movie-rating/movie-rating-read.repository.interface';
 import { UpdateTitleCommandHandler } from './application/use-cases/update-title/update-title.command-handler';
 import { MovieRatingV1ReadRepository } from './infrastructure/outbound/repository/v1/read/movie-rating-read.repository';
 import { UpdateTitleV1Action } from './infrastructure/inbound/api/v1/movie-ratings/update-title/update-title.action';
@@ -100,10 +106,16 @@ import { UpdateTitleV1Action } from './infrastructure/inbound/api/v1/movie-ratin
         MovieRatingV1WriteRepository,
         { provide: CreateMovieRatingRepositoryInterface, useClass: MovieRatingV1WriteRepository },
         { provide: UpdateTitleRepositoryInterface, useClass: MovieRatingV1WriteRepository },
+        { provide: UpdateDescriptionRepositoryInterface, useClass: MovieRatingV1WriteRepository },
+        { provide: UpdateStarsRepositoryInterface, useClass: MovieRatingV1WriteRepository },
+        { provide: DeleteMovieRatingRepositoryInterface, useClass: MovieRatingV1WriteRepository },
 
         MovieRatingV1ReadRepository,
         { provide: UpdateTitleReadRepositoryInterface, useClass: MovieRatingV1ReadRepository },
-
+        { provide: UpdateDescriptionReadRepositoryInterface, useClass: MovieRatingV1ReadRepository },
+        { provide: UpdateStarsReadRepositoryInterface, useClass: MovieRatingV1ReadRepository },
+        { provide: DeleteMovieRatingReadRepositoryInterface, useClass: MovieRatingV1ReadRepository },
+        
         // Readmodel Repositories
         MovieRatingV1ReadmodelWriteRepository,
         MovieRatingV1ReadmodelReadRepository,
