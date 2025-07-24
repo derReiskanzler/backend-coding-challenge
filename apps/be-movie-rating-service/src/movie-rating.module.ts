@@ -11,7 +11,7 @@ import { MovieRatingV1WriteRepository } from './infrastructure/outbound/reposito
 import { CreateMovieRatingCommandHandler } from './application/use-cases/create-movie-rating/create-movie-rating.command-handler';
 import { MovieRatingRepositoryInterface as CreateMovieRatingRepositoryInterface } from './application/use-cases/create-movie-rating/movie-rating.repository.interface';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { MovieRatingMovieRatingsV1ReadmodelWriteRepository } from './infrastructure/outbound/repository/v1/write/movie-rating-movie-ratings-readmodel-write.repository';
+import { MovieRatingV1ReadmodelWriteRepository } from './infrastructure/outbound/repository/v1/write/movie-rating-readmodel-write.repository';
 import { PopulateMovieRatingMovieRatingsProjector } from './infrastructure/inbound/projectors/v1/populate-movie-rating-movie-ratings.projector';
 
 @Module({
@@ -86,7 +86,7 @@ import { PopulateMovieRatingMovieRatingsProjector } from './infrastructure/inbou
         { provide: CreateMovieRatingRepositoryInterface, useClass: MovieRatingV1WriteRepository },
 
         // Readmodel Repositories
-        MovieRatingMovieRatingsV1ReadmodelWriteRepository,
+        MovieRatingV1ReadmodelWriteRepository,
 
         // Command Handlers
         CreateMovieRatingCommandHandler,

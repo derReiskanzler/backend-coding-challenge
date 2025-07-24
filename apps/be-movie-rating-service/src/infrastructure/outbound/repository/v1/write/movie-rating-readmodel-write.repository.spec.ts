@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MovieRatingMovieRatingsV1ReadmodelWriteRepository } from './movie-rating-movie-ratings-readmodel-write.repository';
+import { MovieRatingV1ReadmodelWriteRepository } from './movie-rating-readmodel-write.repository';
 import { MovieRatingDocument } from '../../../../../application/documents/movie-rating.document';
 import { Metadata } from '@backend-monorepo/boilerplate';
 
@@ -12,17 +12,17 @@ jest.mock('@backend-monorepo/boilerplate', () => ({
     },
 }));
 
-describe('MovieRatingMovieRatingsV1ReadmodelWriteRepository', () => {
-    let repository: MovieRatingMovieRatingsV1ReadmodelWriteRepository;
+describe('MovieRatingV1ReadmodelWriteRepository', () => {
+    let repository: MovieRatingV1ReadmodelWriteRepository;
     let mockUpsertDocument: jest.Mock;
     let mockDeleteDocument: jest.Mock;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [MovieRatingMovieRatingsV1ReadmodelWriteRepository],
+            providers: [MovieRatingV1ReadmodelWriteRepository],
         }).compile();
 
-        repository = module.get<MovieRatingMovieRatingsV1ReadmodelWriteRepository>(MovieRatingMovieRatingsV1ReadmodelWriteRepository);
+        repository = module.get<MovieRatingV1ReadmodelWriteRepository>(MovieRatingV1ReadmodelWriteRepository);
         mockUpsertDocument = (repository as any).upsertDocument;
         mockDeleteDocument = (repository as any).deleteDocument;
         

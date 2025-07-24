@@ -1,14 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Logger } from '@nestjs/common';
 import { PopulateMovieRatingMovieRatingsProjector } from './populate-movie-rating-movie-ratings.projector';
-import { MovieRatingMovieRatingsV1ReadmodelWriteRepository } from '../../../outbound/repository/v1/write/movie-rating-movie-ratings-readmodel-write.repository';
+import { MovieRatingV1ReadmodelWriteRepository } from '../../../outbound/repository/v1/write/movie-rating-readmodel-write.repository';
 import { MovieRatingDocument } from '../../../../application/documents/movie-rating.document';
 import { BaseStreamEvent, Metadata } from '@backend-monorepo/boilerplate';
 import { MovieRatingCreatedEvent } from '@backend-monorepo/domain';
 
 describe('PopulateMovieRatingMovieRatingsProjector', () => {
     let projector: PopulateMovieRatingMovieRatingsProjector;
-    let mockWriteRepository: jest.Mocked<MovieRatingMovieRatingsV1ReadmodelWriteRepository>;
+    let mockWriteRepository: jest.Mocked<MovieRatingV1ReadmodelWriteRepository>;
     let mockLogger: jest.Mocked<Logger>;
 
     beforeEach(async () => {
@@ -20,14 +20,14 @@ describe('PopulateMovieRatingMovieRatingsProjector', () => {
             providers: [
                 PopulateMovieRatingMovieRatingsProjector,
                 {
-                    provide: MovieRatingMovieRatingsV1ReadmodelWriteRepository,
+                    provide: MovieRatingV1ReadmodelWriteRepository,
                     useValue: mockRepository,
                 },
             ],
         }).compile();
 
         projector = module.get<PopulateMovieRatingMovieRatingsProjector>(PopulateMovieRatingMovieRatingsProjector);
-        mockWriteRepository = module.get(MovieRatingMovieRatingsV1ReadmodelWriteRepository);
+        mockWriteRepository = module.get(MovieRatingV1ReadmodelWriteRepository);
 
         mockLogger = {
             log: jest.fn(),

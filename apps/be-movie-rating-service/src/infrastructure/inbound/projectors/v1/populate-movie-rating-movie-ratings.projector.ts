@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { BaseStreamEvent, EventStreamEnum, EventStreamListener, EventStreamPayload, Projector } from '@backend-monorepo/boilerplate';
 import { MovieRatingCreatedEvent } from '@backend-monorepo/domain';
-import { MovieRatingMovieRatingsV1ReadmodelWriteRepository } from '../../../outbound/repository/v1/write/movie-rating-movie-ratings-readmodel-write.repository';
+import { MovieRatingV1ReadmodelWriteRepository } from '../../../outbound/repository/v1/write/movie-rating-readmodel-write.repository';
 import { MovieRatingDocument } from '../../../../application/documents/movie-rating.document';
 
 @Projector()
@@ -9,7 +9,7 @@ export class PopulateMovieRatingMovieRatingsProjector {
     private readonly logger = new Logger(PopulateMovieRatingMovieRatingsProjector.name);
     
     constructor(
-        private readonly movieRatingsReadmodelWriteRepository: MovieRatingMovieRatingsV1ReadmodelWriteRepository,
+        private readonly movieRatingsReadmodelWriteRepository: MovieRatingV1ReadmodelWriteRepository,
     ) {}
 
     @EventStreamListener(EventStreamEnum.MOVIE_RATING_MOVIE_RATINGS_V1_STREAM)
