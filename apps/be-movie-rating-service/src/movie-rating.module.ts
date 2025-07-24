@@ -5,7 +5,7 @@ import configuration from './configuration';
 import { AUTH_SERVICE, CqrsBoilerplateModule, EventSourcingBoilerplateModule, EventStoreModule, MessageBrokerModule, ReadmodelProjections } from '@backend-monorepo/boilerplate';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { MovieRatingMovieRatingsV1StateTable } from './infrastructure/schemas/aggregate-state-tables/movie-rating-movie-ratings-v1-state.table';
-import { MovieRatingUsersV1Readmodel } from './infrastructure/schemas/readmodels/movie-rating-users-v1.readmodel';
+import { MovieRatingMovieRatingsV1Readmodel } from './infrastructure/schemas/readmodels/movie-rating-users-v1.readmodel';
 import { CreateMovieRatingV1Action } from './infrastructure/inbound/api/v1/movie-ratings/create-movie-rating/create-movie-rating.action';
 import { MovieRatingV1WriteRepository } from './infrastructure/outbound/repository/v1/write/movie-rating-write.repository';
 import { CreateMovieRatingCommandHandler } from './application/use-cases/create-movie-rating/create-movie-rating.command-handler';
@@ -33,7 +33,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
                     database: configService.get<string>('database.database'),
                     entities: [
                         MovieRatingMovieRatingsV1StateTable,
-                        MovieRatingUsersV1Readmodel,
+                        MovieRatingMovieRatingsV1Readmodel,
                         ReadmodelProjections,
                     ],
                     synchronize: true,
@@ -48,7 +48,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         }),
         TypeOrmModule.forFeature([
             MovieRatingMovieRatingsV1StateTable,
-            MovieRatingUsersV1Readmodel,
+            MovieRatingMovieRatingsV1Readmodel,
             ReadmodelProjections,
         ]),
         ClientsModule.registerAsync([
