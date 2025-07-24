@@ -53,20 +53,18 @@ describe('Username Value Object', () => {
 
     describe('equality', () => {
         it('should treat usernames with same string value as equal in content', () => {
-            const usernameValue = 'same_user';
-            const username1 = Username.fromString(usernameValue);
-            const username2 = Username.fromString(usernameValue);
+            const username1 = Username.fromString('same_user');
+            const username2 = Username.fromString('same_user');
 
-            expect(username1.toString()).toBe(username2.toString());
+            expect(username1.equals(username2)).toBe(true);
         });
 
         it('should be different instances even with same value', () => {
-            const usernameValue = 'same_user';
-            const username1 = Username.fromString(usernameValue);
-            const username2 = Username.fromString(usernameValue);
+            const username1 = Username.fromString('same_user');
+            const username2 = Username.fromString('same_user');
 
             expect(username1).not.toBe(username2);
-            expect(username1.toString()).toBe(username2.toString());
+            expect(username1.equals(username2)).toBe(true);
         });
     });
 });

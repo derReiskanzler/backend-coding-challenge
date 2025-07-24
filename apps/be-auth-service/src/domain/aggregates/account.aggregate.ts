@@ -3,6 +3,7 @@ import {
     Password,
     UserSignedUpEvent,
     Username,
+    UsernameUpdatedEvent,
 } from '@backend-monorepo/domain';
 import { AggregateId, AggregateRoot, Encryptor } from '@backend-monorepo/boilerplate';
 import { AccountState } from './account.state';
@@ -52,6 +53,25 @@ export class Account extends AggregateRoot {
             [AccountState.USERNAME]: event.getUsername(),
             [AccountState.PASSWORD_HASH]: event.getPasswordHash(),
             [AccountState.SALT]: event.getSalt(),
+        });
+    }
+
+    public updateUsername(username: Username): void {
+        if (username.equals(Username.fromString(this.state.getUsername()))) {
+            return;
+        }
+
+        this.recordThat(
+            UsernameUpdatedEvent.create(
+                this.state.getId(),
+                username.toString(),
+            ),
+        );
+    }
+
+    public onUsernameUpdatedEvent(event: UsernameUpdatedEvent): void {
+        this.state = this.state.with({
+            [AccountState.USERNAME]: event.getUsername(),
         });
     }
 }

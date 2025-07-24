@@ -3,6 +3,7 @@ import {
     Password,
     UserSignedUpEvent,
     Username,
+    UsernameUpdatedEvent,
 } from '@backend-monorepo/domain';
 import { AggregateId, Encryptor } from '@backend-monorepo/boilerplate';
 import { Account } from './account.aggregate';
@@ -152,6 +153,149 @@ describe('Account Aggregate', () => {
             expect(state.getUsername()).toBe('seconduser');
             expect(state.getPasswordHash()).toBe('second-hash');
             expect(state.getSalt()).toBe('second-salt');
+        });
+    });
+
+    describe('updateUsername', () => {
+        let account: Account;
+        const accountId = AccountId.fromString('123e4567-e89b-12d3-a456-426614174000');
+        const initialUsername = Username.fromString('initialuser');
+        const password = Password.fromString('ValidPass123!');
+
+        beforeEach(() => {
+            mockEncryptor.encrypt.mockReturnValue({
+                passwordHash: 'hashed-password',
+                salt: 'salt-value'
+            });
+            account = Account.signUp(null, {
+                accountId,
+                username: initialUsername,
+                password,
+            });
+            account.commitEvents();
+        });
+
+        it('should record UsernameUpdatedEvent when username is different', () => {
+            const newUsername = Username.fromString('newusername');
+
+            account.updateUsername(newUsername);
+
+            const pendingEvents = account.getPendingEvents();
+            expect(pendingEvents).toHaveLength(1);
+            
+            const event = pendingEvents[0] as UsernameUpdatedEvent;
+            expect(event).toBeInstanceOf(UsernameUpdatedEvent);
+            expect(event.getId()).toBe(accountId.toString());
+            expect(event.getUsername()).toBe(newUsername.toString());
+        });
+
+        it('should not record event when username is the same', () => {
+            account.updateUsername(initialUsername);
+
+            const pendingEvents = account.getPendingEvents();
+            expect(pendingEvents).toHaveLength(0);
+        });
+
+        it('should record multiple different username updates', () => {
+            const firstNewUsername = Username.fromString('firstnew');
+            const secondNewUsername = Username.fromString('secondnew');
+
+            account.updateUsername(firstNewUsername);
+            account.updateUsername(secondNewUsername);
+
+            const pendingEvents = account.getPendingEvents();
+            expect(pendingEvents).toHaveLength(2);
+            
+            const firstEvent = pendingEvents[0] as UsernameUpdatedEvent;
+            const secondEvent = pendingEvents[1] as UsernameUpdatedEvent;
+            
+            expect(firstEvent.getUsername()).toBe('firstnew');
+            expect(secondEvent.getUsername()).toBe('secondnew');
+        });
+
+        it('should handle whitespace-only username by trimming it', () => {
+            const whitespaceUsername = Username.fromString('   trimmed   ');
+
+            account.updateUsername(whitespaceUsername);
+
+            const pendingEvents = account.getPendingEvents();
+            expect(pendingEvents).toHaveLength(1);
+            
+            const event = pendingEvents[0] as UsernameUpdatedEvent;
+            expect(event.getUsername()).toBe('trimmed');
+        });
+    });
+
+    describe('onUsernameUpdatedEvent', () => {
+        let account: Account;
+        const accountId = AccountId.fromString('123e4567-e89b-12d3-a456-426614174000');
+        const initialUsername = Username.fromString('initialuser');
+        const password = Password.fromString('ValidPass123!');
+
+        beforeEach(() => {
+            mockEncryptor.encrypt.mockReturnValue({
+                passwordHash: 'hashed-password',
+                salt: 'salt-value'
+            });
+            account = Account.signUp(null, {
+                accountId,
+                username: initialUsername,
+                password,
+            });
+        });
+
+        it('should update username in state', () => {
+            const newUsername = 'updatedusername';
+            const event = UsernameUpdatedEvent.create(accountId.toString(), newUsername);
+
+            account.onUsernameUpdatedEvent(event);
+
+            const state = account.getState();
+            expect(state.getUsername()).toBe(newUsername);
+        });
+
+        it('should preserve other state properties when updating username', () => {
+            const originalState = account.getState();
+            const originalId = originalState.getId();
+            const originalPasswordHash = originalState.getPasswordHash();
+            const originalSalt = originalState.getSalt();
+
+            const newUsername = 'updatedusername';
+            const event = UsernameUpdatedEvent.create(accountId.toString(), newUsername);
+
+            account.onUsernameUpdatedEvent(event);
+
+            const updatedState = account.getState();
+            expect(updatedState.getId()).toBe(originalId);
+            expect(updatedState.getPasswordHash()).toBe(originalPasswordHash);
+            expect(updatedState.getSalt()).toBe(originalSalt);
+            expect(updatedState.getUsername()).toBe(newUsername);
+        });
+
+        it('should handle multiple username updates sequentially', () => {
+            const firstNewUsername = 'firstupdate';
+            const secondNewUsername = 'secondupdate';
+
+            const firstEvent = UsernameUpdatedEvent.create(accountId.toString(), firstNewUsername);
+            const secondEvent = UsernameUpdatedEvent.create(accountId.toString(), secondNewUsername);
+
+            account.onUsernameUpdatedEvent(firstEvent);
+            expect(account.getState().getUsername()).toBe(firstNewUsername);
+
+            account.onUsernameUpdatedEvent(secondEvent);
+            expect(account.getState().getUsername()).toBe(secondNewUsername);
+        });
+
+        it('should create new state instance when updating username', () => {
+            const originalState = account.getState();
+            const newUsername = 'updatedusername';
+            const event = UsernameUpdatedEvent.create(accountId.toString(), newUsername);
+
+            account.onUsernameUpdatedEvent(event);
+
+            const updatedState = account.getState();
+            expect(updatedState).not.toBe(originalState);
+            expect(updatedState.getUsername()).toBe(newUsername);
         });
     });
 

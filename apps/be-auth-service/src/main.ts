@@ -8,6 +8,7 @@ import { NestFactory } from '@nestjs/core';
 import { AuthModule } from './auth.module';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
+import { HttpExceptionFilter } from '@backend-monorepo/boilerplate';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
@@ -35,6 +36,8 @@ async function bootstrap() {
   
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
+
+  app.useGlobalFilters(new HttpExceptionFilter(configService));
 
   app.startAllMicroservices();
 
