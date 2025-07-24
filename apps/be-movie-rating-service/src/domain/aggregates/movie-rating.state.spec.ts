@@ -170,13 +170,14 @@ describe('MovieRatingState', () => {
 
     describe('static constants', () => {
         it('should use static constants consistently', () => {
+            const createdAt = new Date();
             const recordData = {
                 [MovieRatingState.ID]: '123e4567-e89b-12d3-a456-426614174000',
                 [MovieRatingState.TITLE]: 'testtitle',
                 [MovieRatingState.DESCRIPTION]: 'testdescription',
                 [MovieRatingState.STARS]: 1,
                 [MovieRatingState.ACCOUNT_ID]: '123e4567-e89b-12d3-a456-426614174001',
-                [MovieRatingState.CREATED_AT]: new Date(),
+                [MovieRatingState.CREATED_AT]: createdAt,
             };
 
             const state = MovieRatingState.fromRecordData(recordData);
@@ -186,7 +187,7 @@ describe('MovieRatingState', () => {
             expect(state.getDescription()).toBe('testdescription');
             expect(state.getStars()).toBe(1);
             expect(state.getAccountId()).toBe('123e4567-e89b-12d3-a456-426614174001');
-            expect(state.getCreatedAt()).toBe(new Date());
+            expect(state.getCreatedAt()).toBe(createdAt);
         });
     });
 

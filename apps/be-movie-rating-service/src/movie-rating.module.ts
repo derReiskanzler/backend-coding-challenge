@@ -10,6 +10,7 @@ import { CreateMovieRatingV1Action } from './infrastructure/inbound/api/v1/movie
 import { MovieRatingV1WriteRepository } from './infrastructure/outbound/repository/v1/write/movie-rating-write.repository';
 import { CreateMovieRatingCommandHandler } from './application/use-cases/create-movie-rating/create-movie-rating.command-handler';
 import { MovieRatingRepositoryInterface as CreateMovieRatingRepositoryInterface } from './application/use-cases/create-movie-rating/movie-rating.repository.interface';
+import { MovieRatingRepositoryInterface as UpdateTitleRepositoryInterface } from './application/use-cases/update-title/movie-rating.repository.interface';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MovieRatingV1ReadmodelWriteRepository } from './infrastructure/outbound/repository/v1/write/movie-rating-readmodel-write.repository';
 import { PopulateMovieRatingMovieRatingsProjector } from './infrastructure/inbound/projectors/v1/populate-movie-rating-movie-ratings.projector';
@@ -20,6 +21,10 @@ import { GetMovieRatingV1Action } from './infrastructure/inbound/api/v1/movie-ra
 import { GetMovieRatingsQueryHandler } from './application/use-cases/get-movie-ratings/get-movie-ratings.query-handler';
 import { GetMovieRatingsV1Action } from './infrastructure/inbound/api/v1/movie-ratings/get-movie-ratings/get-movie-ratings.action';
 import { GetMovieRatingsDocumentRepositoryInterface } from './application/use-cases/get-movie-ratings/get-movie-ratings-document.repository.interface';
+import { MovieRatingReadRepositoryInterface as UpdateTitleReadRepositoryInterface } from './application/use-cases/update-title/movie-rating-read.repository.interface';
+import { UpdateTitleCommandHandler } from './application/use-cases/update-title/update-title.command-handler';
+import { MovieRatingV1ReadRepository } from './infrastructure/outbound/repository/v1/read/movie-rating-read.repository';
+import { UpdateTitleV1Action } from './infrastructure/inbound/api/v1/movie-ratings/update-title/update-title.action';
 
 @Module({
     imports: [
@@ -85,6 +90,7 @@ import { GetMovieRatingsDocumentRepositoryInterface } from './application/use-ca
         CreateMovieRatingV1Action,
         GetMovieRatingV1Action,
         GetMovieRatingsV1Action,
+        UpdateTitleV1Action,
 
         // Projectors
         PopulateMovieRatingMovieRatingsProjector,
@@ -93,6 +99,10 @@ import { GetMovieRatingsDocumentRepositoryInterface } from './application/use-ca
         // Aggregate Repositories
         MovieRatingV1WriteRepository,
         { provide: CreateMovieRatingRepositoryInterface, useClass: MovieRatingV1WriteRepository },
+        { provide: UpdateTitleRepositoryInterface, useClass: MovieRatingV1WriteRepository },
+
+        MovieRatingV1ReadRepository,
+        { provide: UpdateTitleReadRepositoryInterface, useClass: MovieRatingV1ReadRepository },
 
         // Readmodel Repositories
         MovieRatingV1ReadmodelWriteRepository,
@@ -102,6 +112,7 @@ import { GetMovieRatingsDocumentRepositoryInterface } from './application/use-ca
         
         // Command Handlers
         CreateMovieRatingCommandHandler,
+        UpdateTitleCommandHandler,
 
         // Query Handlers
         GetMovieRatingQueryHandler,
