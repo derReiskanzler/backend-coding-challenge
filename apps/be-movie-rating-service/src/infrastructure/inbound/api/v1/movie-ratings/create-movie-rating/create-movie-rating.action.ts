@@ -1,5 +1,5 @@
-import { Body, Controller, Post, Res, ValidationPipe } from '@nestjs/common';
-import { AuthenticatedUser, CommandBusService, CurrentUser } from '@backend-monorepo/boilerplate';
+import { Body, Controller, Post, Res, UseGuards, ValidationPipe } from '@nestjs/common';
+import { AuthenticatedUser, CommandBusService, CurrentUser, JwtAuthGuard } from '@backend-monorepo/boilerplate';
 import { AccountId, Description, MovieRatingStars, Title } from '@backend-monorepo/domain';
 import type { Response } from 'express';
 import { CreateMovieRatingCommand } from '../../../../../../application/use-cases/create-movie-rating/create-movie-rating.command';
@@ -11,6 +11,7 @@ export class CreateMovieRatingV1Action {
     private readonly commandBus: CommandBusService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   public async index(
     @CurrentUser() user: AuthenticatedUser,

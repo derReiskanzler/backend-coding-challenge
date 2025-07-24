@@ -29,6 +29,14 @@ async function bootstrap() {
     },
   });
 
+  app.connectMicroservice({
+    transport: Transport.TCP,
+    options: {
+      host: configService.get<string>('auth.host'),
+      port: configService.get<number>('auth.port'),
+    },
+  });
+  
   app.enableCors({...configService.get('app.cors'), 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     preflightContinue: false,

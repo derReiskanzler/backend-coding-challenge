@@ -2,7 +2,7 @@ import { Logger, Module } from '@nestjs/common';
 import { AppController } from './app/app.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './configuration';
-import { CqrsBoilerplateModule, EventSourcingBoilerplateModule, EventStoreModule, MessageBrokerModule, ReadmodelProjections } from '@backend-monorepo/boilerplate';
+import { AUTH_SERVICE, CqrsBoilerplateModule, EventSourcingBoilerplateModule, EventStoreModule, MessageBrokerModule, ReadmodelProjections } from '@backend-monorepo/boilerplate';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { MovieRatingMovieRatingsV1StateTable } from './infrastructure/schemas/aggregate-state-tables/movie-rating-movie-ratings-v1-state.table';
 import { MovieRatingUsersV1Readmodel } from './infrastructure/schemas/readmodels/movie-rating-users-v1.readmodel';
@@ -10,6 +10,7 @@ import { CreateMovieRatingV1Action } from './infrastructure/inbound/api/v1/movie
 import { MovieRatingV1WriteRepository } from './infrastructure/outbound/repository/v1/write/movie-rating-write.repository';
 import { CreateMovieRatingCommandHandler } from './application/use-cases/create-movie-rating/create-movie-rating.command-handler';
 import { MovieRatingRepositoryInterface as CreateMovieRatingRepositoryInterface } from './application/use-cases/create-movie-rating/movie-rating.repository.interface';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
     imports: [
@@ -49,6 +50,19 @@ import { MovieRatingRepositoryInterface as CreateMovieRatingRepositoryInterface 
             MovieRatingMovieRatingsV1StateTable,
             MovieRatingUsersV1Readmodel,
             ReadmodelProjections,
+        ]),
+        ClientsModule.registerAsync([
+            {
+              name: AUTH_SERVICE,
+              useFactory: (configService: ConfigService) => ({
+                transport: Transport.TCP,
+                options: {
+                    host: configService.get('auth.host'),
+                    port: configService.get('auth.port'),
+                },
+              }),
+              inject: [ConfigService],
+            },
         ]),
         CqrsBoilerplateModule,
         EventSourcingBoilerplateModule,

@@ -33,5 +33,9 @@
     "jwt": {
         "secret": "secret",
         "expiration": 28800
+    },
+    "auth": {
+        "host": "be-auth-service",
+        "port": 3002
     }
 }

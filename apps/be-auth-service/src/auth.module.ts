@@ -24,6 +24,7 @@ import { JwtStrategy } from './infrastructure/util/strategies/jwt.strategy';
 import { UpdateUsernameV1Action } from './infrastructure/inbound/api/v1/accounts/update-username/update-username.action';
 import { AccountRepositoryInterface as UpdateUsernameRepositoryInterface } from './application/use-cases/update-username/account.repository.interface';
 import { ValidateV1Action } from './infrastructure/inbound/api/v1/auth/validate.action';
+import { AuthenticateV1Action } from './infrastructure/inbound/tcp/v1/authenticate.action';
 
 @Module({
   imports: [
@@ -88,6 +89,9 @@ import { ValidateV1Action } from './infrastructure/inbound/api/v1/auth/validate.
     // API - Auth
     LoginV1Action,
     ValidateV1Action,
+
+    // TCP - Auth
+    AuthenticateV1Action,
 
     // Projectors
     PopulateAuthUsersProjector,

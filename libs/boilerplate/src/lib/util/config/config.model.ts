@@ -61,6 +61,14 @@ class JwtSettings {
     expiration: string;
 }
 
+class AuthSettings {
+    @IsString()
+    host: string;
+
+    @IsPort()
+    port: string;
+}
+
 export class Config {
     @ValidateNested()
     @IsDefined()
@@ -85,4 +93,8 @@ export class Config {
     @ValidateNested()
     @IsOptional()
     jwt: JwtSettings;
+
+    @ValidateNested()
+    @IsDefined()
+    auth: AuthSettings;
 }
