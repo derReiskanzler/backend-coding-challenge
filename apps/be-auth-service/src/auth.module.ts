@@ -25,6 +25,9 @@ import { UpdateUsernameV1Action } from './infrastructure/inbound/api/v1/accounts
 import { AccountRepositoryInterface as UpdateUsernameRepositoryInterface } from './application/use-cases/update-username/account.repository.interface';
 import { ValidateV1Action } from './infrastructure/inbound/api/v1/auth/validate.action';
 import { AuthenticateV1Action } from './infrastructure/inbound/tcp/v1/authenticate.action';
+import { GetAccountV1Action } from './infrastructure/inbound/api/v1/accounts/get-account/get-account.action';
+import { GetAccountQueryHandler } from './application/use-cases/get-account/get-account.query-handler';
+import { GetAccountDocumentRepositoryInterface } from './application/use-cases/get-account/get-account-document.repository.interface';
 
 @Module({
   imports: [
@@ -85,6 +88,7 @@ import { AuthenticateV1Action } from './infrastructure/inbound/tcp/v1/authentica
     // API - Accounts
     SignUpV1Action,
     UpdateUsernameV1Action,
+    GetAccountV1Action,
 
     // API - Auth
     LoginV1Action,
@@ -101,6 +105,7 @@ import { AuthenticateV1Action } from './infrastructure/inbound/tcp/v1/authentica
     AuthUsersV1ReadmodelWriteRepository,
     AuthUsersV1ReadmodelReadRepository,
     { provide: GetSignUpReadmodelRepositoryInterface, useExisting: AuthUsersV1ReadmodelReadRepository },
+    { provide: GetAccountDocumentRepositoryInterface, useExisting: AuthUsersV1ReadmodelReadRepository },
 
     // Aggregate repositories
     AccountV1WriteRepository,
@@ -113,6 +118,9 @@ import { AuthenticateV1Action } from './infrastructure/inbound/tcp/v1/authentica
     // Command Handlers
     SignUpCommandHandler,
     UpdateUsernameCommandHandler,
+
+    // Query Handlers
+    GetAccountQueryHandler,
 
     // Strategies
     JwtStrategy,

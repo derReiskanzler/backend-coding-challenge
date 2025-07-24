@@ -6,10 +6,14 @@ import {
 } from '@backend-monorepo/boilerplate';
 import { GetUsersDocumentRepositoryInterface as GetSignUpReadmodelRepositoryInterface } from '../../../../../application/use-cases/sign-up/get-users-document.repository.interface';
 import { AuthUserDocument } from '../../../../../application/documents/auth-user.document';
+import { GetAccountDocumentRepositoryInterface } from '../../../../../application/use-cases/get-account/get-account-document.repository.interface';
 
 @Injectable()
 @ReadmodelRepository(ReadmodelEnum.AUTH_USERS_V1_READMODEL, AuthUserDocument)
-export class AuthUsersV1ReadmodelReadRepository extends ReadmodelReadRepository implements GetSignUpReadmodelRepositoryInterface {
+export class AuthUsersV1ReadmodelReadRepository extends ReadmodelReadRepository implements
+    GetSignUpReadmodelRepositoryInterface,
+    GetAccountDocumentRepositoryInterface
+{
     public async getById(id: string): Promise<AuthUserDocument|null> {
         return await this.getDocument<AuthUserDocument>({ id });
     }
