@@ -6,16 +6,17 @@ describe('AuthUserDocument', () => {
     const validUsername = 'john.doe';
 
     it('should create instance with valid id and username', () => {
-        const document = new AuthUserDocument(validId, validUsername);
+        const document = new AuthUserDocument(validId, validUsername, new Date());
 
         expect(document).toBeInstanceOf(AuthUserDocument);
     });
 
     it('should store id and username correctly', () => {
-        const document = new AuthUserDocument(validId, validUsername);
+        const document = new AuthUserDocument(validId, validUsername, new Date());
 
         expect(document.id).toBe(validId);
         expect(document.username).toBe(validUsername);
+        expect(document.createdAt).toBeInstanceOf(Date);
     });
 
     it('should have correct ID constant', () => {
@@ -26,16 +27,22 @@ describe('AuthUserDocument', () => {
         expect(AuthUserDocument.USERNAME).toBe('username');
     });
 
+    it('should have correct CREATED_AT constant', () => {
+        expect(AuthUserDocument.CREATED_AT).toBe('createdAt');
+    });
+
     it('should extend ReadmodelDocument class', () => {
-        const document = new AuthUserDocument(validId, validUsername);
+        const document = new AuthUserDocument(validId, validUsername, new Date());
 
         expect(document).toBeInstanceOf(ReadmodelDocument);
     });
 
     it('should call parent constructor with correct mapping', () => {
-        const document = new AuthUserDocument(validId, validUsername);
+        const createdAt = new Date();
+        const document = new AuthUserDocument(validId, validUsername, createdAt);
 
         expect(document).toHaveProperty('id', validId);
         expect(document).toHaveProperty('username', validUsername);
+        expect(document).toHaveProperty('createdAt', createdAt);
     });
 });

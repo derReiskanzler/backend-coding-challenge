@@ -93,6 +93,7 @@ describe('SignUpCommandHandler', () => {
                 const existingUserDocument = new AuthUserDocument(
                     '123e4567-e89b-12d3-a456-426614174000',
                     'john.doe',
+                    new Date(),
                 );
                 mockReadRepository.getByUsername.mockResolvedValue(existingUserDocument);
 
@@ -105,6 +106,7 @@ describe('SignUpCommandHandler', () => {
                 const existingUserDocument = new AuthUserDocument(
                     '123e4567-e89b-12d3-a456-426614174000',
                     'john.doe',
+                    new Date(),
                 );
                 mockReadRepository.getByUsername.mockResolvedValue(existingUserDocument);
 

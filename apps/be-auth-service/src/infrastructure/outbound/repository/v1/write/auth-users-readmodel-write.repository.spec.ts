@@ -37,7 +37,7 @@ describe('AuthUsersV1ReadmodelWriteRepository', () => {
         const testCausationId = '123e4567-e89b-12d3-a456-426614174002';
 
         beforeEach(() => {
-            mockUserDocument = new AuthUserDocument(testUserId, 'testuser');
+            mockUserDocument = new AuthUserDocument(testUserId, 'testuser', new Date());
             mockMetadata = {
                 causationId: testCausationId,
                 causationName: 'TestCommand',
@@ -129,8 +129,8 @@ describe('AuthUsersV1ReadmodelWriteRepository', () => {
     });
 
     it('should handle multiple consecutive operations', async () => {
-        const userDoc1 = new AuthUserDocument('user-1', 'username1');
-        const userDoc2 = new AuthUserDocument('user-2', 'username2');
+        const userDoc1 = new AuthUserDocument('user-1', 'username1', new Date());
+        const userDoc2 = new AuthUserDocument('user-2', 'username2', new Date());
         const metadata = { causationId: 'cmd-123', causationName: 'TestCommand' };
 
         mockUpsertDocument.mockResolvedValue(undefined);

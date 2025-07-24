@@ -28,7 +28,7 @@ describe('AuthUsersV1ReadmodelReadRepository', () => {
         const testUserId = '123e4567-e89b-12d3-a456-426614174000';
 
         it('should return user document when found', async () => {
-            const mockUserDocument = new AuthUserDocument(testUserId, 'testuser');
+            const mockUserDocument = new AuthUserDocument(testUserId, 'testuser', new Date());
             mockGetDocument.mockResolvedValue(mockUserDocument);
 
             const result = await repository.getById(testUserId);
@@ -78,7 +78,7 @@ describe('AuthUsersV1ReadmodelReadRepository', () => {
         const testUserId = '123e4567-e89b-12d3-a456-426614174000';
 
         it('should return user document when found', async () => {
-            const mockUserDocument = new AuthUserDocument(testUserId, testUsername);
+            const mockUserDocument = new AuthUserDocument(testUserId, testUsername, new Date());
             mockGetDocument.mockResolvedValue(mockUserDocument);
 
             const result = await repository.getByUsername(testUsername);
@@ -126,8 +126,8 @@ describe('AuthUsersV1ReadmodelReadRepository', () => {
     it('should handle multiple consecutive read operations', async () => {
         const testUserId1 = '123e4567-e89b-12d3-a456-426614174000';
         const testUserId2 = '123e4567-e89b-12d3-a456-426614174001';
-        const userDoc1 = new AuthUserDocument(testUserId1, 'username1');
-        const userDoc2 = new AuthUserDocument(testUserId2, 'username2');
+        const userDoc1 = new AuthUserDocument(testUserId1, 'username1', new Date());
+        const userDoc2 = new AuthUserDocument(testUserId2, 'username2', new Date());
 
         mockGetDocument.mockResolvedValueOnce(userDoc1);
         mockGetDocument.mockResolvedValueOnce(userDoc2);

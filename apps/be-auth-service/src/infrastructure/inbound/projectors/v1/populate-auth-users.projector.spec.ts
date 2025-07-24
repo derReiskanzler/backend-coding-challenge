@@ -5,15 +5,21 @@ import { AuthUsersV1ReadmodelWriteRepository } from '../../../outbound/repositor
 import { AuthUserDocument } from '../../../../application/documents/auth-user.document';
 import { BaseStreamEvent, Metadata } from '@backend-monorepo/boilerplate';
 import { UserSignedUpEvent, UsernameUpdatedEvent } from '@backend-monorepo/domain';
+import { AuthUsersV1ReadmodelReadRepository } from '../../../outbound/repository/v1/read/auth-users-readmodel-read.repository';
 
 describe('PopulateAuthUsersProjector', () => {
     let projector: PopulateAuthUsersProjector;
     let mockWriteRepository: jest.Mocked<AuthUsersV1ReadmodelWriteRepository>;
+    let mockReadRepository: jest.Mocked<AuthUsersV1ReadmodelReadRepository>;
     let mockLogger: jest.Mocked<Logger>;
 
     beforeEach(async () => {
         const mockRepository = {
             upsert: jest.fn(),
+        };
+
+        const mockAggregateReadRepository = {
+            getById: jest.fn(),
         };
 
         const module: TestingModule = await Test.createTestingModule({
@@ -23,11 +29,16 @@ describe('PopulateAuthUsersProjector', () => {
                     provide: AuthUsersV1ReadmodelWriteRepository,
                     useValue: mockRepository,
                 },
+                {
+                    provide: AuthUsersV1ReadmodelReadRepository,
+                    useValue: mockAggregateReadRepository,
+                },
             ],
         }).compile();
 
         projector = module.get<PopulateAuthUsersProjector>(PopulateAuthUsersProjector);
         mockWriteRepository = module.get(AuthUsersV1ReadmodelWriteRepository);
+        mockReadRepository = module.get(AuthUsersV1ReadmodelReadRepository);
 
         mockLogger = {
             log: jest.fn(),
@@ -107,6 +118,7 @@ describe('PopulateAuthUsersProjector', () => {
 
             it('should handle UsernameUpdatedEvent successfully', async () => {
                 const mockEvent = createMockEvent(UsernameUpdatedEvent.name, mockPayload);
+                mockReadRepository.getById.mockResolvedValue(new AuthUserDocument(mockPayload.id, mockPayload.username, new Date()));
                 mockWriteRepository.upsert.mockResolvedValue(undefined);
 
                 await projector.handleAccountsStreamEvents(mockEvent);
@@ -127,6 +139,7 @@ describe('PopulateAuthUsersProjector', () => {
             it('should propagate errors from repository', async () => {
                 const mockEvent = createMockEvent(UsernameUpdatedEvent.name, mockPayload);
                 const testError = new Error('Update failed');
+                mockReadRepository.getById.mockResolvedValue(new AuthUserDocument(mockPayload.id, mockPayload.username, new Date()));
                 mockWriteRepository.upsert.mockRejectedValue(testError);
 
                 await expect(projector.handleAccountsStreamEvents(mockEvent)).rejects.toThrow(
@@ -182,7 +195,8 @@ describe('PopulateAuthUsersProjector', () => {
                 createMockEvent(UsernameUpdatedEvent.name, { id: 'user-1', username: 'updateduser1' }),
                 createMockEvent(UserSignedUpEvent.name, { id: 'user-2', username: 'user2' }),
             ];
-
+            mockReadRepository.getById.mockResolvedValueOnce(new AuthUserDocument('user-1', 'user1', new Date()));
+            mockReadRepository.getById.mockResolvedValueOnce(new AuthUserDocument('user-2', 'user2', new Date()));
             mockWriteRepository.upsert.mockResolvedValue(undefined);
 
             for (const event of events) {
