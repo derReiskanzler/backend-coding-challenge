@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
 import { CreateMovieRatingV1Action } from './create-movie-rating.action';
-import { AuthenticatedUser, CommandBusService } from '@backend-monorepo/boilerplate';
+import { AuthenticatedUser, CommandBusService, AUTH_SERVICE } from '@backend-monorepo/boilerplate';
 import { Title, Description, MovieRatingStars, AccountId } from '@backend-monorepo/domain';
 import { CreateMovieRatingDto } from '../../../dtos/create-movie-rating.dto';
 import { CreateMovieRatingCommand } from '../../../../../../application/use-cases/create-movie-rating/create-movie-rating.command';
+import { of } from 'rxjs';
 
 describe('CreateMovieRatingV1Action', () => {
     let action: CreateMovieRatingV1Action;
@@ -21,12 +22,20 @@ describe('CreateMovieRatingV1Action', () => {
             dispatch: jest.fn(),
         };
 
+        const mockAuthService = {
+            send: jest.fn().mockReturnValue(of(mockUser)),
+        };
+
         const module: TestingModule = await Test.createTestingModule({
             controllers: [CreateMovieRatingV1Action],
             providers: [
                 {
                     provide: CommandBusService,
                     useValue: mockCommandBusService,
+                },
+                {
+                    provide: AUTH_SERVICE,
+                    useValue: mockAuthService,
                 },
             ],
         }).compile();
