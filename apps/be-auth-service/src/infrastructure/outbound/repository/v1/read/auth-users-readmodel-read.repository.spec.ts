@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthUsersV1ReadmodelReadRepository } from './auth-users-readmodel-read.repository';
 import { AuthUserDocument } from '../../../../../application/documents/auth-user.document';
-import { UsersReadmodelReadRepositoryInterface } from '../../../../../application/use-cases/sign-up/users-readmodel-read.repository.interface';
 
 jest.mock('@backend-monorepo/boilerplate', () => ({
     ...jest.requireActual('@backend-monorepo/boilerplate'),
@@ -125,14 +124,16 @@ describe('AuthUsersV1ReadmodelReadRepository', () => {
     });
 
     it('should handle multiple consecutive read operations', async () => {
-        const userDoc1 = new AuthUserDocument('user-1', 'username1');
-        const userDoc2 = new AuthUserDocument('user-2', 'username2');
+        const testUserId1 = '123e4567-e89b-12d3-a456-426614174000';
+        const testUserId2 = '123e4567-e89b-12d3-a456-426614174001';
+        const userDoc1 = new AuthUserDocument(testUserId1, 'username1');
+        const userDoc2 = new AuthUserDocument(testUserId2, 'username2');
 
         mockGetDocument.mockResolvedValueOnce(userDoc1);
         mockGetDocument.mockResolvedValueOnce(userDoc2);
         mockGetDocument.mockResolvedValueOnce(null);
 
-        const result1 = await repository.getById('user-1');
+        const result1 = await repository.getById(testUserId1);
         const result2 = await repository.getByUsername('username2');
         const result3 = await repository.getById('non-existent');
 
@@ -141,7 +142,7 @@ describe('AuthUsersV1ReadmodelReadRepository', () => {
         expect(result3).toBeNull();
 
         expect(mockGetDocument).toHaveBeenCalledTimes(3);
-        expect(mockGetDocument).toHaveBeenNthCalledWith(1, { id: 'user-1' });
+        expect(mockGetDocument).toHaveBeenNthCalledWith(1, { id: testUserId1 });
         expect(mockGetDocument).toHaveBeenNthCalledWith(2, { body: { username: 'username2' } });
         expect(mockGetDocument).toHaveBeenNthCalledWith(3, { id: 'non-existent' });
     });

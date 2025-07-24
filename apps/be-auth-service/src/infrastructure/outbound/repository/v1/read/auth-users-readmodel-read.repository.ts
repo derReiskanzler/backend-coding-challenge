@@ -4,7 +4,7 @@ import {
     ReadmodelEnum,
     ReadmodelReadRepository,
 } from '@backend-monorepo/boilerplate';
-import { UsersReadmodelReadRepositoryInterface as GetSignUpReadmodelRepositoryInterface } from '../../../../../application/use-cases/sign-up/users-readmodel-read.repository.interface';
+import { GetUsersDocumentRepositoryInterface as GetSignUpReadmodelRepositoryInterface } from '../../../../../application/use-cases/sign-up/get-users-document.repository.interface';
 import { AuthUserDocument } from '../../../../../application/documents/auth-user.document';
 
 @Injectable()

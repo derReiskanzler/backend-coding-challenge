@@ -1,5 +1,5 @@
 import { Password, Username, UserSignedUpEvent } from '@backend-monorepo/domain';
-import { UsersReadmodelReadRepositoryInterface } from './users-readmodel-read.repository.interface';
+import { GetUsersDocumentRepositoryInterface } from './get-users-document.repository.interface';
 import { SignUpCommand } from './sign-up.command';
 import { SignUpCommandHandler } from './sign-up.command-handler';
 import { AccountRepositoryInterface } from './account.repository.interface';
@@ -11,7 +11,7 @@ import { AccountAlreadyExistsException } from '../../../domain/exceptions/accoun
 describe('SignUpCommandHandler', () => {
     let handler: SignUpCommandHandler;
     let mockWriteRepository: jest.Mocked<AccountRepositoryInterface>;
-    let mockReadRepository: jest.Mocked<UsersReadmodelReadRepositoryInterface>;
+    let mockReadRepository: jest.Mocked<GetUsersDocumentRepositoryInterface>;
 
     beforeEach(() => {
         mockWriteRepository = {

@@ -12,7 +12,7 @@ import { AccountV1WriteRepository } from './infrastructure/outbound/repository/v
 import { SignUpV1Action } from './infrastructure/inbound/api/v1/accounts/sign-up/sign-up.action';
 import { SignUpCommandHandler } from './application/use-cases/sign-up/sign-up.command-handler';
 import { AccountRepositoryInterface as SignUpRepositoryInterface } from './application/use-cases/sign-up/account.repository.interface';
-import { UsersReadmodelReadRepositoryInterface as GetSignUpReadmodelRepositoryInterface } from './application/use-cases/sign-up/users-readmodel-read.repository.interface';
+import { GetUsersDocumentRepositoryInterface as GetSignUpReadmodelRepositoryInterface } from './application/use-cases/sign-up/get-users-document.repository.interface';
 import { AuthUsersV1ReadmodelReadRepository } from './infrastructure/outbound/repository/v1/read/auth-users-readmodel-read.repository';
 import { AccountV1ReadRepository } from './infrastructure/outbound/repository/v1/read/account-read.repository';
 import { AccountReadRepositoryInterface as GetUpdateUsernameRepositoryInterface } from './application/use-cases/update-username/account-read.repository.interface';

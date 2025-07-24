@@ -7,13 +7,13 @@ import { SignUpCommand } from './sign-up.command';
 import { Account } from '../../../domain/aggregates/account.aggregate';
 import { AccountId, Username } from '@backend-monorepo/domain';
 import { AccountRepositoryInterface } from './account.repository.interface';
-import { UsersReadmodelReadRepositoryInterface } from './users-readmodel-read.repository.interface';
+import { GetUsersDocumentRepositoryInterface } from './get-users-document.repository.interface';
 
 @CommandHandler(SignUpCommand)
 export class SignUpCommandHandler extends ICommandHandler<SignUpCommand,string> {
     constructor(
         private readonly accountWriteRepository: AccountRepositoryInterface,
-        private readonly accountReadRepository: UsersReadmodelReadRepositoryInterface,
+        private readonly accountReadRepository: GetUsersDocumentRepositoryInterface,
     ) {
         super();
     }

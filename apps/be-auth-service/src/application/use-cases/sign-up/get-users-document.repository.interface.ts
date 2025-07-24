@@ -1,5 +1,5 @@
 import { AuthUserDocument } from '../../documents/auth-user.document';
 
-export abstract class UsersReadmodelReadRepositoryInterface {
+export abstract class GetUsersDocumentRepositoryInterface {
     public abstract getByUsername(username: string): Promise<AuthUserDocument|null>
 }
