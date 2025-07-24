@@ -31,6 +31,12 @@ import { MovieRatingReadRepositoryInterface as DeleteMovieRatingReadRepositoryIn
 import { UpdateTitleCommandHandler } from './application/use-cases/update-title/update-title.command-handler';
 import { MovieRatingV1ReadRepository } from './infrastructure/outbound/repository/v1/read/movie-rating-read.repository';
 import { UpdateTitleV1Action } from './infrastructure/inbound/api/v1/movie-ratings/update-title/update-title.action';
+import { UpdateDescriptionCommandHandler } from './application/use-cases/update-description/update-description.command-handler';
+import { UpdateStarsCommandHandler } from './application/use-cases/update-stars/update-stars.command-handler';
+import { DeleteMovieRatingCommandHandler } from './application/use-cases/delete-movie-rating/delete-movie-rating.command-handler';
+import { DeleteMovieRatingV1Action } from './infrastructure/inbound/api/v1/movie-ratings/delete-movie-rating/delete-movie-rating.action';
+import { UpdateDescriptionV1Action } from './infrastructure/inbound/api/v1/movie-ratings/update-description/update-description.action';
+import { UpdateStarsV1Action } from './infrastructure/inbound/api/v1/movie-ratings/update-stars/update-stars.action';
 
 @Module({
     imports: [
@@ -97,7 +103,10 @@ import { UpdateTitleV1Action } from './infrastructure/inbound/api/v1/movie-ratin
         GetMovieRatingV1Action,
         GetMovieRatingsV1Action,
         UpdateTitleV1Action,
-
+        UpdateDescriptionV1Action,
+        UpdateStarsV1Action,
+        DeleteMovieRatingV1Action,
+        
         // Projectors
         PopulateMovieRatingMovieRatingsProjector,
     ],
@@ -125,6 +134,9 @@ import { UpdateTitleV1Action } from './infrastructure/inbound/api/v1/movie-ratin
         // Command Handlers
         CreateMovieRatingCommandHandler,
         UpdateTitleCommandHandler,
+        UpdateDescriptionCommandHandler,
+        UpdateStarsCommandHandler,
+        DeleteMovieRatingCommandHandler,
 
         // Query Handlers
         GetMovieRatingQueryHandler,
