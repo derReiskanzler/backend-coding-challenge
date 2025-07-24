@@ -13,6 +13,10 @@ import { MovieRatingRepositoryInterface as CreateMovieRatingRepositoryInterface 
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MovieRatingV1ReadmodelWriteRepository } from './infrastructure/outbound/repository/v1/write/movie-rating-readmodel-write.repository';
 import { PopulateMovieRatingMovieRatingsProjector } from './infrastructure/inbound/projectors/v1/populate-movie-rating-movie-ratings.projector';
+import { MovieRatingV1ReadmodelReadRepository } from './infrastructure/outbound/repository/v1/read/movie-rating-readmodel-read.repository';
+import { GetMovieRatingDocumentRepositoryInterface } from './application/use-cases/get-movie-rating/get-movie-rating-document.repository.interface';
+import { GetMovieRatingQueryHandler } from './application/use-cases/get-movie-rating/get-movie-rating.query-handler';
+import { GetMovieRatingV1Action } from './infrastructure/inbound/api/v1/movie-ratings/get-movie-rating/get-movie-rating.action';
 
 @Module({
     imports: [
@@ -76,6 +80,7 @@ import { PopulateMovieRatingMovieRatingsProjector } from './infrastructure/inbou
 
         // API - Movie Ratings
         CreateMovieRatingV1Action,
+        GetMovieRatingV1Action,
 
         // Projectors
         PopulateMovieRatingMovieRatingsProjector,
@@ -87,9 +92,14 @@ import { PopulateMovieRatingMovieRatingsProjector } from './infrastructure/inbou
 
         // Readmodel Repositories
         MovieRatingV1ReadmodelWriteRepository,
+        MovieRatingV1ReadmodelReadRepository,
+        { provide: GetMovieRatingDocumentRepositoryInterface, useClass: MovieRatingV1ReadmodelReadRepository },
 
         // Command Handlers
         CreateMovieRatingCommandHandler,
+
+        // Query Handlers
+        GetMovieRatingQueryHandler,
     ],
 })
 export class MovieRatingModule {}
