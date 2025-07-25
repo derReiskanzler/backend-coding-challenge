@@ -20,6 +20,19 @@
 ![](./docs/img/docker-compose-up.png)
 
 
+Apps are served under:
+- https://localhost:3000/api - Auth Service
+- https://localhost:3001/api - Movie Rating Service
+
+Each Database can be accessed under following config:
+- host: localhost
+- user & pw: root
+- database: postgres
+- port:
+    - 5432 - Event Store
+    - 5433 - Auth DB
+    - 5434 - Movie Rating DB
+
 Note: `POST /sign-up` and `/movie-rating` return the created ID in the header
 ![](./docs/img/postman-create-rating.png)
 
